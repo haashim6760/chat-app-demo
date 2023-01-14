@@ -131,19 +131,6 @@ let createUserWithPassword = async (e: React.FormEvent<HTMLFormElement>) => {
                         placeholder="Confirm Password"
                         onChange={(e) => setPasswordConfirm(e.target.value)}/>    
                 }
-                    {/* <div>
-                        <button type="submit" className="button-main">
-                            Sign in
-                        </button>
-                    </div>
-
-                    <a
-                    href="#"
-                    onClick={() => setForgotPasswordMode(true)}
-                    className="authentication-Forgot"
-                    >
-                        Forgot Password?
-                    </a> */}
                     {createUserMode ? <div>
                         <button type="submit" className="button-main">Create Button</button>
                         <button type="button" onClick={() => setCreateUserMode(false)}>Sign In</button>
