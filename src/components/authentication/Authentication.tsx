@@ -1,6 +1,7 @@
 import { FirebaseError } from "firebase/app";
 import React, { useState } from "react";
 import {useUser} from "../../providers/UserProvider"
+import "./Authentication.css"
 
 function Authentication() {
 let {
@@ -123,12 +124,7 @@ let createUserWithPassword = async (e: React.FormEvent<HTMLFormElement>) => {
                     onChange={(e) => setPassword(e.target.value)}
                     />
 
-                    <button
-                    className="google-button"
-                    onClick={signInWithGoogle}
-                    >
-                    Sign In With Google
-                    </button>
+                    
 
                     {createUserMode && <input
                         className="authenication-form-input"
@@ -138,14 +134,21 @@ let createUserWithPassword = async (e: React.FormEvent<HTMLFormElement>) => {
                         onChange={(e) => setPasswordConfirm(e.target.value)}/>    
                 }
                     {createUserMode ? <div>
-                        <button type="submit" className="button-main">Create Button</button>
-                        <button type="button" onClick={() => setCreateUserMode(false)}>Sign In</button>
+                        <button type="submit" className="button-main">Create Account</button>
+                        <button type="button" onClick={() => setCreateUserMode(false)}>Back to Log In Page</button>
                     </div>
                     : <div>
                         <button type="submit" className="button-main">Sign In</button>
                         <button type="button" onClick={() => setCreateUserMode(true)}>Create User</button>
+                        <button
+                    className="google-button"
+                    onClick={signInWithGoogle}
+                    >
+                    Sign In With Google
+                    </button>
                         </div>}
                         <a href="#" onClick={() => setForgotPasswordMode(true)} className="authentication-forgot">Forgot Password</a>
+                        
                     {success && (
                         <span className="authentication-success">{success}</span>
                     )}

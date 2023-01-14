@@ -1,0 +1,45 @@
+.authentication {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.authentication-form {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.authentication-form-input {
+    display: block;
+}
+
+.authentication-forgot {
+    display: block;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.authentication-or {
+    display: block;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.authentication-success {
+    color: green;
+    font-size: 12px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.authentication-error {
+    color: red;
+    font-size: 12px;
+    margin: 20px 0;
+    text-align: center;
+}
