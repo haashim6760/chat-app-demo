@@ -11,7 +11,9 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
     <FirebaseProvider>
-    <App></App>
+      <UserProvider>
+    <App />
+    </UserProvider>
     </FirebaseProvider>
     </BrowserRouter>
 </React.StrictMode>,

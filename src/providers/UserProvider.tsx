@@ -17,7 +17,7 @@ type UserContextType = {
     Promise<UserCredential | void | undefined>;
     signInWithPassword: (email: string, password: string) =>
     Promise<UserCredential | void | undefined>;
-    createUserWithPassword: (email: string, password: string) =>
+    createUserWithEmailAndPassword: (email: string, password: string) =>
     Promise<UserCredential | void | undefined>;
     resetPassword: (email: string) =>
     Promise<UserCredential | void | undefined>;
@@ -29,7 +29,7 @@ const UserContext = createContext<UserContextType>({
     user: undefined,
     signInWithGoogle: async () => {},
     signInWithPassword: async () => {},
-    createUserWithPassword: async () => {},
+    createUserWithEmailAndPassword: async () => {},
     resetPassword: async () => {},
     signOut: async () => {},
 
@@ -60,7 +60,7 @@ export default function UserProvider({ children}: {children: React.ReactNode}){
                     return signInWithEmailAndPassword(auth, email, password);
                 }
             },
-            createUserWithPassword: async (email: string, password: string) => {
+            createUserWithEmailAndPassword: async (email: string, password: string) => {
                 if (auth) {
                     return sendPasswordResetEmail(auth, email);
                 }
