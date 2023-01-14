@@ -1,6 +1,6 @@
 import { FirebaseError } from "firebase/app";
 import React, { useState } from "react";
-import {useUser} from "../providers/UserProvider"
+import {useUser} from "../../providers/UserProvider"
 
 function Authentication() {
 let {
