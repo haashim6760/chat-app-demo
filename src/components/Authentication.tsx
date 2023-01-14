@@ -9,7 +9,6 @@ let {
     createUserWithEmailAndPassword,
     signInWithGoogle
 } = useUser();
-let [signInMode, setSignInWithMode] = useState(false);
 let [forgotPasswordMode, setForgotPasswordMode] = useState(false);
 let [createUserMode, setCreateUserMode] = useState(false);
 let [email, setEmail] = useState("");
@@ -123,6 +122,13 @@ let createUserWithPassword = async (e: React.FormEvent<HTMLFormElement>) => {
                     placeholder="Password"
                     onChange={(e) => setPassword(e.target.value)}
                     />
+
+                    <button
+                    className="google-button"
+                    onClick={signInWithGoogle}
+                    >
+                    Sign In With Google
+                    </button>
 
                     {createUserMode && <input
                         className="authenication-form-input"
