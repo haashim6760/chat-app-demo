@@ -24,9 +24,12 @@ const handleUserSignIn = async (e: {preventDefault: () => void}) => {
             setError("")
          
             })
+            .catch((e) => {
+                let error = e as FirebaseError;
+                setError(error.message);
+            })
     }catch(e){
-        let error = e as FirebaseError;
-        setError(error.message);
+       
     }
 
 } else {
@@ -50,6 +53,7 @@ const handleCreateUser = async (e: {preventDefault: () => void}) => {
             setError("")
             signInWithEmailAndPassword (auth!, email, password)
         })
+        
     } catch(e){
         let error = e as FirebaseError;
         setError(error.message);
@@ -86,16 +90,17 @@ setError("Please Fill In All Fields")
                         setPassword(event.target.value)}
                     />
 
-                    
-
-
                     <button
                     className="button-main"
                     type="submit">
                         Sign In
                     </button>
                         
-                    
+                    {error? (
+            <div className="error"><br/>
+                {error}
+            </div>
+        ): (<div></div>)}   
                     
 </form>):(
     <div><form className="authentication-form" onSubmit={handleCreateUser}>
@@ -133,7 +138,11 @@ setError("Please Fill In All Fields")
         Create User
     </button>
         
-    
+    {error? (
+            <div className="error"><br/>
+                {error}
+            </div>
+        ): (<div></div>)} 
     
 </form></div>
 )}
@@ -144,11 +153,7 @@ setError("Please Fill In All Fields")
                     ) : (<div></div>)}</form>
 </div>
 
-{error? (
-            <div className="error"><br/>
-                {error}
-            </div>
-        ): (<div></div>)}   
+  
         </article>
     );
 
