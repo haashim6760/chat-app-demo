@@ -10,7 +10,7 @@ function Header() {
                 {user && (
                     <div className="app-header-navbar">
                         <span className="app-header-navbar-item">
-                            <a onClick={signOut}>Signout</a>
+                            <a onClick={signOut}>Sign Out</a>
                             </span></div>
                 )}
             </div>

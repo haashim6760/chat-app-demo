@@ -15,7 +15,7 @@ type UserContextType = {
     user: User | null | undefined;
     signInWithGoogle: () =>
     Promise<UserCredential | void | undefined>;
-    signInWithPassword: (email: string, password: string) =>
+    signInWithEmailAndPassword: (email: string, password: string) =>
     Promise<UserCredential | void | undefined>;
     createUserWithEmailAndPassword: (email: string, password: string) =>
     Promise<UserCredential | void | undefined>;
@@ -28,7 +28,7 @@ type UserContextType = {
 const UserContext = createContext<UserContextType>({
     user: undefined,
     signInWithGoogle: async () => {},
-    signInWithPassword: async () => {},
+    signInWithEmailAndPassword: async () => {},
     createUserWithEmailAndPassword: async () => {},
     resetPassword: async () => {},
     signOut: async () => {},
@@ -55,7 +55,7 @@ export default function UserProvider({ children}: {children: React.ReactNode}){
                     return signInWithPopup(auth, provider);
                 }
             },
-            signInWithPassword: async (email: string, password: string) => {
+            signInWithEmailAndPassword: async (email: string, password: string) => {
                 if (auth) {
                     return signInWithEmailAndPassword(auth, email, password);
                 }

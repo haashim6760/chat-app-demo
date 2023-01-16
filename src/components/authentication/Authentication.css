@@ -1,8 +1,10 @@
 .authentication {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
+    align-content: center;
+    padding-top: 250px;
 }
 
 .authentication-form {
@@ -12,13 +14,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: stretch;
+    
 }
 
 .authentication-form-input {
     display: block;
 }
 
-.authentication-forgot {
+.authentication-forgot, .create-user, .google-link {
     display: block;
     margin-top: 10px;
     text-align: center;
@@ -43,3 +46,6 @@
     margin: 20px 0;
     text-align: center;
 }
+
+
+

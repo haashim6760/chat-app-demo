@@ -1,119 +1,80 @@
 import { FirebaseError } from "firebase/app";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
+import { useFirebase } from "../../providers/FirebaseProvider";
 import {useUser} from "../../providers/UserProvider"
 import "./Authentication.css"
 
 function Authentication() {
-let {
-    signInWithPassword,
-    resetPassword,
-    createUserWithEmailAndPassword,
-    signInWithGoogle
-} = useUser();
-let [forgotPasswordMode, setForgotPasswordMode] = useState(false);
-let [createUserMode, setCreateUserMode] = useState(false);
+
 let [email, setEmail] = useState("");
 let [password, setPassword] = useState("");
-let [passwordConfirm, setPasswordConfirm] = useState('')
-let [success, setSuccess] = useState(false);
+let [passwordConfirm, setPasswordConfirm] = useState("");
+let {auth} = useFirebase();
 let [error, setError] = useState("");
+let [toggleCreateUserForm, setToggleCreateUserForm] = useState(false);
 
-let handleSignInWithPassword = async (
-    e: React.FormEvent<HTMLFormElement>
-) => {
-    if (email !== "" && password !=="") {
-        try {
-            await signInWithPassword(email, password);
-            setError("");
-            setSuccess(true);
-        } catch (e) {
-            let error = e as FirebaseError;
-            setError(error.message);
-            setSuccess(false);
-        }      
-    } else {
-        setError("Please Fill In All Fields")
+const handleUserSignIn = async (e: {preventDefault: () => void}) => {
+    e.preventDefault()
+
+    if (email !== "" && password !== ""){
+        try{
+         signInWithEmailAndPassword(auth!, email,password)
+         .then((data) => {
+            setError("")
+         
+            })
+    }catch(e){
+        let error = e as FirebaseError;
+        setError(error.message);
     }
+
+} else {
+    setError("Please Fill In All Fields.")
+}}
+
+const showCreateUserForm =async (e: {preventDefault: () => void}) => {
+    e.preventDefault()
+
+    setToggleCreateUserForm(true)
 }
 
-let createUserWithPassword = async (e: React.FormEvent<HTMLFormElement>) => {
-    if (email !== '' && password !== '' && password === passwordConfirm) {
-        try {
-            await createUserWithEmailAndPassword(email, password);
-            setError('');
-            setSuccess(true);
-        } catch (e) {
-            let error = e as FirebaseError;
-            setError(error.message);
-            setSuccess(false);
-        }
-    } else {
-        setError ('Please Fill In All Fields.');
+const handleCreateUser = async (e: {preventDefault: () => void}) => { 
+    e.preventDefault()
+    if (email !== "" && password !== "" && passwordConfirm !== ""){  
+        if (password === passwordConfirm){
+    try{
+        createUserWithEmailAndPassword(auth!, email, password)
+        .then((data) =>
+        {
+            setError("")
+            signInWithEmailAndPassword (auth!, email, password)
+        })
+    } catch(e){
+        let error = e as FirebaseError;
+        setError(error.message);
     }
+} else {
+    setError("Please Ensure That Both Of Your Passwords Are The Same")
+}
+}else {
+setError("Please Fill In All Fields")
+}  
 }
 
     return (
         <article className="app-main-article">
             <div className="authentication">
-                {forgotPasswordMode ? 
-                    <>
-                    <h1>Forgot Password </h1>
-                    <p> Please enter your email address and we will send you a link to reset your password</p>
-                    <form 
-                    onSubmit={(e) =>{
-                    e.preventDefault();
-                    setForgotPasswordMode(false);}
-                    }>
+               {toggleCreateUserForm === false ? (
+             <form className="authentication-form" onSubmit={handleUserSignIn}>
                     
-                    <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Email"
-                    />
-
-                    <button
-                    type="button"
-                    onClick={async () => {
-                        try {
-                            await resetPassword(email);
-                            setError("");
-                            setForgotPasswordMode(false);
-                        } catch (e) {
-                            let error = e as FirebaseError;
-                            setError(error.message);
-                        }
-                    }}
-                    >
-                        Send
-                        </button>
-                        <a
-                        href="#"
-                        onClick={() => setForgotPasswordMode(false)}
-                        className="authentication-forgot"
-                        >
-                            Go Back
-                        </a>
-                    </form>
-                    </>
-                 : 
-                    <>
-                    <form
-                    className="authentication-form"
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        if (createUserMode) {
-                            createUserWithPassword(e);
-                        }else {
-                        handleSignInWithPassword(e);
-                    }}}
-                    >
                     <input
                     className="authentication-form-input"
                     type="email"
                     value={email}
                     placeholder="Email"
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        setEmail(event.target.value)}
                     />
 
                     <input
@@ -121,44 +82,73 @@ let createUserWithPassword = async (e: React.FormEvent<HTMLFormElement>) => {
                     type="password"
                     value={password}
                     placeholder="Password"
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        setPassword(event.target.value)}
                     />
 
                     
 
-                    {createUserMode && <input
-                        className="authenication-form-input"
-                        type={password}
+
+                    <button
+                    className="button-main"
+                    type="submit">
+                        Sign In
+                    </button>
+                        
+                    
+                    
+</form>):(
+    <div><form className="authentication-form" onSubmit={handleCreateUser}>
+                    
+    <input
+    className="authentication-form-input"
+    type="email"
+    value={email}
+    placeholder="Email"
+    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        setEmail(event.target.value)}
+    />
+
+    <input
+    className="authentication-form-input"
+    type="password"
+    value={password}
+    placeholder="Password"
+    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+        setPassword(event.target.value)}
+    />
+
+    <input
+                        className="authentication-form-input"
+                        type="password"
                         value={passwordConfirm}
                         placeholder="Confirm Password"
-                        onChange={(e) => setPasswordConfirm(e.target.value)}/>    
-                }
-                    {createUserMode ? <div>
-                        <button type="submit" className="button-main">Create Account</button>
-                        <button type="button" onClick={() => setCreateUserMode(false)}>Back to Log In Page</button>
-                    </div>
-                    : <div>
-                        <button type="submit" className="button-main">Sign In</button>
-                        <button type="button" onClick={() => setCreateUserMode(true)}>Create User</button>
-                        <button
-                    className="google-button"
-                    onClick={signInWithGoogle}
-                    >
-                    Sign In With Google
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                            setPasswordConfirm(event.target.value)}
+                        />
+
+    <button
+    className="button-main"
+    type="submit">
+        Create User
+    </button>
+        
+    
+    
+</form></div>
+)}
+<form className="authentication" onSubmit={showCreateUserForm}>
+       {toggleCreateUserForm === false ? (<button className="create-user-button" >
+                        Don't Have An Account? <br/> Register Now
                     </button>
-                        </div>}
-                        <a href="#" onClick={() => setForgotPasswordMode(true)} className="authentication-forgot">Forgot Password</a>
-                        
-                    {success && (
-                        <span className="authentication-success">{success}</span>
-                    )}
-                    {error.length > 0 && (
-                        <span className="authentication-error">{error}</span>
-                    )}
-                    </form>
-                    </>
-                }
+                    ) : (<div></div>)}</form>
+</div>
+
+{error? (
+            <div className="error"><br/>
+                {error}
             </div>
+        ): (<div></div>)}   
         </article>
     );
 
