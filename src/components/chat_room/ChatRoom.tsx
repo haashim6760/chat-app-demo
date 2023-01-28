@@ -28,7 +28,7 @@ function Chatroom() {
     if (user && firestore) {
       let allMessagesCollection = query(
         collection(firestore!, `messages`),
-        orderBy("date")
+        orderBy("date", "asc")
       );
 
       onSnapshot(allMessagesCollection, (snapshot) => {
@@ -43,18 +43,25 @@ function Chatroom() {
 
   const sendNewMessage = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    try {
-      addDoc(messageRef, {
-        message_chat: newMessage,
-        date: currentDate,
-        uid: user?.uid,
-      }).then(() => {
-        console.log("Sent");
-      });
-    } catch (e) {
-      setError("There Was An Error Sending Your Message");
-      let error = e as FirebaseError;
-      setError(error.message);
+    if (newMessage !== "") {
+      try {
+        console.log("message", newMessage);
+        addDoc(messageRef, {
+          message_chat: newMessage,
+          date: currentDate,
+          uid: user?.uid,
+        }).then(() => {
+          console.log("Sent");
+          setNewMessage("");
+          console.log("should be empty", newMessage);
+        });
+      } catch (e) {
+        setError("There Was An Error Sending Your Message");
+        let error = e as FirebaseError;
+        setError(error.message);
+      }
+    } else {
+      setError("Cannot Send Empty Messages");
     }
   };
 
