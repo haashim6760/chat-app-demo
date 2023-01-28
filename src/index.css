@@ -88,7 +88,6 @@ button:disabled:hover {
 }
 
 .button-main:hover {
-  background-color: var(--accent-color-dark);
   border: 1px solid var(--accent-color-dark);
 }
 
@@ -127,9 +126,9 @@ select {
   transition: all 0.2s ease-in-out;
 }
 
-table {
+/* table {
   border-collapse: collapse;
-}
+} */
 
 tbody {
   display: table-row-group;
@@ -138,19 +137,7 @@ tbody {
 }
 
 tr {
-  border-bottom: 1px solid #ccc;
-}
-
-tr:nth-child(even) {
-  background-color: #fafafa;
-}
-
-tr:nth-child(odd) {
-  background-color: #fff;
-}
-
-tr:hover {
-  background-color: #f5f5f5;
+  /* border-bottom: 1px solid #ccc; */
 }
 
 th {
@@ -169,7 +156,7 @@ td {
 }
 
 body {
-  background-color: rgb(255, 251, 251);
+  background-color: rgb(45, 45, 45);
 }
 
 .error {

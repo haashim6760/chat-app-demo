@@ -61,7 +61,7 @@ function Chatroom() {
   return (
     <article className="app-main-article">
       {/* <div className="chat-app-main"> */}
-      <form className="new-message" onSubmit={sendNewMessage}>
+      <form className="message" onSubmit={sendNewMessage}>
         <table className="chat-app-main">
           {messages?.map((entry) => {
             try {
@@ -97,8 +97,10 @@ function Chatroom() {
           ) : (
             <div></div>
           )}
+
           <div className="new-message">
             <input
+              className="new-message-input"
               type="text"
               placeholder="Message"
               value={newMessage}
@@ -113,7 +115,6 @@ function Chatroom() {
           </div>
         </table>
       </form>
-      {/* </div> */}
     </article>
   );
 }
