@@ -8,7 +8,7 @@
 }
 
 .authentication-form {
-  max-width: 500px;
+  /* max-width: 500px; */
   flex-direction: column;
   justify-content: center;
   align-items: column;
@@ -18,7 +18,24 @@
   width: 20%;
 }
 
-.authentication-form-input {
+.create-user-form {
+  /* max-width: 500px; */
+  flex-direction: column;
+  justify-content: center;
+  align-items: column;
+  display: flex;
+  gap: 5px;
+  /* padding-left: 12.5%;
+  width: 20%; */
+}
+
+.create-user-button {
+  margin-left: 12.5%;
+  width: 75%;
+}
+
+.authentication-form-input,
+.create-user-form-input {
   display: block;
 }
 

@@ -35,12 +35,6 @@ function Authentication() {
     }
   };
 
-  // const showCreateUserForm = async (e: { preventDefault: () => void }) => {
-  //   e.preventDefault();
-
-  //   setToggleCreateUserForm(true);
-  // };
-
   const handleCreateUser = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (email !== "" && password !== "" && passwordConfirm !== "") {
@@ -118,9 +112,9 @@ function Authentication() {
           </form>
         ) : (
           <div>
-            <form className="authentication-form" onSubmit={handleCreateUser}>
+            <form className="create-user-form" onSubmit={handleCreateUser}>
               <input
-                className="authentication-form-input"
+                className="create-user-form-input"
                 type="email"
                 value={email}
                 placeholder="Email"
@@ -130,7 +124,7 @@ function Authentication() {
               />
 
               <input
-                className="authentication-form-input"
+                className="create-user-form-input"
                 type="password"
                 value={password}
                 placeholder="Password"
@@ -140,7 +134,7 @@ function Authentication() {
               />
 
               <input
-                className="authentication-form-input"
+                className="create-user-form-input"
                 type="password"
                 value={passwordConfirm}
                 placeholder="Confirm Password"
@@ -161,15 +155,23 @@ function Authentication() {
               ) : (
                 <div></div>
               )}
+              <button
+                type="button"
+                className="create-user-button"
+                onClick={async () => {
+                  try {
+                    setToggleCreateUserForm(false);
+                  } catch (e) {
+                    let error = e as FirebaseError;
+                    setError(error.message);
+                  }
+                }}
+              >
+                Back To Sign In Form
+              </button>
             </form>
           </div>
         )}{" "}
-        {/* {toggleCreateUserForm === false ? ( */}
-        {/* <form className="authentication" onSubmit={showCreateUserForm}> */}
-        {/* </form> */}
-        {/* ) : (
-          <div></div>
-        )} */}
       </div>
     </article>
   );
