@@ -1,3 +1,4 @@
+import { FirebaseError } from "firebase/app";
 import {
   addDoc,
   collection,
@@ -37,21 +38,20 @@ function Chatroom() {
     try {
       addDoc(messageRef, {
         message_chat: newMessage,
+      }).then(() => {
+        console.log("Sent");
       });
-    } catch {
+    } catch (e) {
       setError("There Was An Error Sending Your Message");
+      let error = e as FirebaseError;
+      setError(error.message);
     }
   };
 
   return (
     <article className="app-main-article">
-      {/* <div className="view-messages"> */}
       <form className="new-message" onSubmit={sendNewMessage}>
         <table>
-          {/* {messages?.map((entry) =>     
-                        <td>{entry.data().message_chat}</td>
-                )} */}
-
           {messages?.map((entry) => {
             try {
               return entry.data().message_chat ? (
@@ -59,17 +59,25 @@ function Chatroom() {
                   <tr key={entry.id}>
                     <td>{entry.data().message_chat}</td>
                   </tr>
-                  {console.log("NOW")}
                 </>
               ) : (
                 <tr></tr>
               );
             } catch (e: any) {
+              setError("There Was An Error Viewing Your Message");
+
               return;
             }
           })}
           {/* </div> */}
-
+          {error ? (
+            <div className="error">
+              <br />
+              {error}
+            </div>
+          ) : (
+            <div></div>
+          )}
           <div className="new-message">
             <input
               type="text"
