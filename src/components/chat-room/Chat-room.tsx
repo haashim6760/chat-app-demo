@@ -4,6 +4,8 @@ import {
   collection,
   DocumentData,
   onSnapshot,
+  orderBy,
+  query,
   QueryDocumentSnapshot,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
@@ -19,9 +21,14 @@ function Chatroom() {
   let { firestore } = useFirebase();
   let messageRef = collection(firestore!, `messages`);
   let { user } = useUser();
+  let currentDate = new Date();
+
   useEffect(() => {
     if (user && firestore) {
-      let allMessagesCollection = collection(firestore!, `messages`);
+      let allMessagesCollection = query(
+        collection(firestore!, `messages`),
+        orderBy("date")
+      );
 
       onSnapshot(allMessagesCollection, (snapshot) => {
         setMessages(
@@ -31,13 +38,14 @@ function Chatroom() {
         );
       });
     }
-  });
+  }, [newMessage]);
 
   const sendNewMessage = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
       addDoc(messageRef, {
         message_chat: newMessage,
+        date: currentDate,
       }).then(() => {
         console.log("Sent");
       });
