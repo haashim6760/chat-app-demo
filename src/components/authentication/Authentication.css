@@ -4,18 +4,18 @@
   align-items: center;
   justify-content: center;
   align-content: center;
-  padding-top: 12.5%;
+  padding-top: 17.5%;
 }
 
 .authentication-form {
-  width: 100%;
   max-width: 500px;
   flex-direction: column;
   justify-content: center;
   align-items: column;
   display: flex;
-  gap: 10px;
-  padding-left: 12.5%;
+  gap: 5px;
+  /* padding-left: 12.5%; */
+  width: 20%;
 }
 
 .authentication-form-input {
@@ -25,7 +25,7 @@
 .authentication-forgot,
 .create-user,
 .google-link {
-  display: block;
+  display: flex;
   margin-top: 10px;
   text-align: center;
 }

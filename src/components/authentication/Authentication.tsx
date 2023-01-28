@@ -78,7 +78,7 @@ function Authentication() {
                 setEmail(event.target.value)
               }
             />
-            <br />
+
             <input
               className="authentication-form-input"
               type="password"
@@ -98,6 +98,15 @@ function Authentication() {
                 <br />
                 {error}
               </div>
+            ) : (
+              <div></div>
+            )}
+            {toggleCreateUserForm === false ? (
+              <form className="authentication" onSubmit={showCreateUserForm}>
+                <button className="create-user-button">
+                  Don't Have An Account? <br /> Register Now
+                </button>{" "}
+              </form>
             ) : (
               <div></div>
             )}
@@ -150,15 +159,6 @@ function Authentication() {
             </form>
           </div>
         )}
-        <form className="authentication" onSubmit={showCreateUserForm}>
-          {toggleCreateUserForm === false ? (
-            <button className="create-user-button">
-              Don't Have An Account? <br /> Register Now
-            </button>
-          ) : (
-            <div></div>
-          )}
-        </form>
       </div>
     </article>
   );
