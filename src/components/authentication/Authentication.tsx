@@ -3,7 +3,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFirebase } from "../../providers/FirebaseProvider";
 import { useUser } from "../../providers/UserProvider";
 import "./Authentication.css";
@@ -35,11 +35,11 @@ function Authentication() {
     }
   };
 
-  const showCreateUserForm = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
+  // const showCreateUserForm = async (e: { preventDefault: () => void }) => {
+  //   e.preventDefault();
 
-    setToggleCreateUserForm(true);
-  };
+  //   setToggleCreateUserForm(true);
+  // };
 
   const handleCreateUser = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -101,15 +101,20 @@ function Authentication() {
             ) : (
               <div></div>
             )}
-            {toggleCreateUserForm === false ? (
-              <form className="authentication" onSubmit={showCreateUserForm}>
-                <button className="create-user-button">
-                  Don't Have An Account? <br /> Register Now
-                </button>{" "}
-              </form>
-            ) : (
-              <div></div>
-            )}
+            <button
+              type="button"
+              className="create-user-button"
+              onClick={async () => {
+                try {
+                  setToggleCreateUserForm(true);
+                } catch (e) {
+                  let error = e as FirebaseError;
+                  setError(error.message);
+                }
+              }}
+            >
+              Don't Have An Account? <br /> Register Now
+            </button>
           </form>
         ) : (
           <div>
@@ -158,7 +163,13 @@ function Authentication() {
               )}
             </form>
           </div>
-        )}
+        )}{" "}
+        {/* {toggleCreateUserForm === false ? ( */}
+        {/* <form className="authentication" onSubmit={showCreateUserForm}> */}
+        {/* </form> */}
+        {/* ) : (
+          <div></div>
+        )} */}
       </div>
     </article>
   );
