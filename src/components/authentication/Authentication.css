@@ -1,51 +1,51 @@
 .authentication {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    align-content: center;
-    padding-top: 250px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  padding-top: 12.5%;
 }
 
 .authentication-form {
-    width: 100%;
-    max-width: 500px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: stretch;
-    
+  width: 100%;
+  max-width: 500px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: column;
+  display: flex;
+  gap: 10px;
+  padding-left: 12.5%;
 }
 
 .authentication-form-input {
-    display: block;
+  display: block;
 }
 
-.authentication-forgot, .create-user, .google-link {
-    display: block;
-    margin-top: 10px;
-    text-align: center;
+.authentication-forgot,
+.create-user,
+.google-link {
+  display: block;
+  margin-top: 10px;
+  text-align: center;
 }
 
 .authentication-or {
-    display: block;
-    margin: 20px 0;
-    text-align: center;
+  display: block;
+  margin: 20px 0;
+  text-align: center;
 }
 
 .authentication-success {
-    color: green;
-    font-size: 12px;
-    margin: 20px 0;
-    text-align: center;
+  color: green;
+  font-size: 12px;
+  margin: 20px 0;
+  text-align: center;
 }
 
 .authentication-error {
-    color: red;
-    font-size: 12px;
-    margin: 20px 0;
-    text-align: center;
+  color: red;
+  font-size: 12px;
+  margin: 20px 0;
+  text-align: center;
 }
-
-
-
