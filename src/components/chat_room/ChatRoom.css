@@ -1,0 +1,20 @@
+.chat-app-main {
+  /* max-width: 500px; */
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: column; */
+  display: flex;
+  gap: 5px;
+  padding-left: 42.5%;
+  width: 20%;
+  padding-top: 10%;
+}
+
+.new-message {
+  display: flex;
+}
+
+.users-messages {
+  color: blue;
+  padding-left: 1200%;
+}

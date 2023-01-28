@@ -11,6 +11,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useFirebase } from "../../providers/FirebaseProvider";
 import { useUser } from "../../providers/UserProvider";
+import "./ChatRoom.css";
 
 function Chatroom() {
   let [newMessage, setNewMessage] = useState("");
@@ -46,6 +47,7 @@ function Chatroom() {
       addDoc(messageRef, {
         message_chat: newMessage,
         date: currentDate,
+        uid: user?.uid,
       }).then(() => {
         console.log("Sent");
       });
@@ -58,14 +60,23 @@ function Chatroom() {
 
   return (
     <article className="app-main-article">
+      {/* <div className="chat-app-main"> */}
       <form className="new-message" onSubmit={sendNewMessage}>
-        <table>
+        <table className="chat-app-main">
           {messages?.map((entry) => {
             try {
               return entry.data().message_chat ? (
                 <>
                   <tr key={entry.id}>
-                    <td>{entry.data().message_chat}</td>
+                    {entry.data().uid !== user?.uid ? (
+                      <>
+                        <td>{entry.data().message_chat}</td>
+                      </>
+                    ) : (
+                      <td className="users-messages">
+                        {entry.data().message_chat}
+                      </td>
+                    )}
                   </tr>
                 </>
               ) : (
@@ -102,6 +113,7 @@ function Chatroom() {
           </div>
         </table>
       </form>
+      {/* </div> */}
     </article>
   );
 }
