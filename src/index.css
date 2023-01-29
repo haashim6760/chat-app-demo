@@ -43,9 +43,9 @@ h6 {
 
 button {
   background-color: #fff;
-  border: 1px solid #ccc;
+  border: 1px solid;
   border-radius: 4px;
-  padding: 8px 16px;
+  padding: 0.625% 1.25%;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -74,6 +74,7 @@ button:disabled:hover {
   color: #fff;
   border: 1px solid var(--accent-color);
   margin-left: 12.5%;
+  padding: 4% 8%;
 }
 
 .button-main:hover {
@@ -93,31 +94,14 @@ a:hover {
 input {
   border: 1px solid #ccc;
   border-radius: 4px;
-  padding: 8px 16px;
+  padding: 0.625% 1.25%;
   font-size: 16px;
   transition: all 0.2s ease-in-out;
-}
-
-input[type="date"] {
-  padding: 6px 16px;
 }
 
 input:hover {
   border: 1px solid #999;
 }
-
-select {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
-
-/* table {
-  border-collapse: collapse;
-} */
 
 tbody {
   display: table-row-group;
@@ -125,21 +109,9 @@ tbody {
   border-color: inherit;
 }
 
+td,
 tr {
-  /* border-bottom: 1px solid #ccc; */
-}
-
-th {
-  text-align: left;
-  padding: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  border-bottom: 1px solid #ccc;
-}
-
-td {
-  padding: 8px;
+  padding: 1%;
   font-size: 16px;
   color: #333;
 }

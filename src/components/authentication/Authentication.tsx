@@ -96,7 +96,7 @@ function Authentication() {
             )}
             <button
               type="button"
-              className="create-user-button"
+              className="button-main"
               onClick={async () => {
                 try {
                   setToggleCreateUserForm(true);
@@ -106,7 +106,7 @@ function Authentication() {
                 }
               }}
             >
-              Don't Have An Account? <br /> Register Now
+              Register Now
             </button>
           </form>
         ) : (
@@ -157,7 +157,7 @@ function Authentication() {
               )}
               <button
                 type="button"
-                className="create-user-button"
+                className="button-main"
                 onClick={async () => {
                   try {
                     setToggleCreateUserForm(false);
