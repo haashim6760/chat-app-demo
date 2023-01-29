@@ -3,9 +3,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useFirebase } from "../../providers/FirebaseProvider";
-import { useUser } from "../../providers/UserProvider";
 import "./Authentication.css";
 
 function Authentication() {
@@ -82,7 +81,7 @@ function Authentication() {
                 setPassword(event.target.value)
               }
             />
-
+            <div className="space-between-input"></div>
             <button className="button-main" type="submit">
               Sign In
             </button>
@@ -97,7 +96,7 @@ function Authentication() {
             )}
             <button
               type="button"
-              className="create-user-button"
+              className="button-main"
               onClick={async () => {
                 try {
                   setToggleCreateUserForm(true);
@@ -107,7 +106,7 @@ function Authentication() {
                 }
               }}
             >
-              Don't Have An Account? <br /> Register Now
+              Register Now
             </button>
           </form>
         ) : (
@@ -142,6 +141,7 @@ function Authentication() {
                   setPasswordConfirm(event.target.value)
                 }
               />
+              <div className="space-between-input"></div>
 
               <button className="button-main" type="submit">
                 Create User
@@ -157,7 +157,7 @@ function Authentication() {
               )}
               <button
                 type="button"
-                className="create-user-button"
+                className="button-main"
                 onClick={async () => {
                   try {
                     setToggleCreateUserForm(false);
@@ -171,7 +171,7 @@ function Authentication() {
               </button>
             </form>
           </div>
-        )}{" "}
+        )}
       </div>
     </article>
   );
