@@ -1,10 +1,8 @@
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { getAuth, Auth } from "firebase/auth";
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { getAnalytics, Analytics } from "firebase/analytics";
 import { getFirestore, Firestore } from "firebase/firestore";
 import { getStorage, FirebaseStorage } from "firebase/storage";
-import { async } from "@firebase/util";
 
 type FirebaseContextType = {
   app: FirebaseApp | null;

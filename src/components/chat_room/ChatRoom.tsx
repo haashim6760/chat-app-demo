@@ -67,7 +67,6 @@ function Chatroom() {
 
   return (
     <article className="app-main-article">
-      {/* <div className="chat-app-main"> */}
       <form className="message" onSubmit={sendNewMessage}>
         <table className="chat-app-main">
           {messages?.map((entry) => {
@@ -95,7 +94,7 @@ function Chatroom() {
               return;
             }
           })}
-          {/* </div> */}
+
           {error ? (
             <div className="error">
               <br />
