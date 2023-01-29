@@ -82,7 +82,7 @@ function Authentication() {
                 setPassword(event.target.value)
               }
             />
-
+            <div className="space-between-input"></div>
             <button className="button-main" type="submit">
               Sign In
             </button>
@@ -142,6 +142,7 @@ function Authentication() {
                   setPasswordConfirm(event.target.value)
                 }
               />
+              <div className="space-between-input"></div>
 
               <button className="button-main" type="submit">
                 Create User
@@ -171,7 +172,7 @@ function Authentication() {
               </button>
             </form>
           </div>
-        )}{" "}
+        )}
       </div>
     </article>
   );

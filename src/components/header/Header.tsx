@@ -9,8 +9,8 @@ function Header() {
       <div className="app-header-inner">
         {user && (
           <div className="app-header-navbar">
-            <button className="app-header-navbar-item">
-              <a onClick={signOut}>Sign Out</a>
+            <button className="app-header-navbar-item" onClick={signOut}>
+              Sign Out
             </button>
           </div>
         )}
