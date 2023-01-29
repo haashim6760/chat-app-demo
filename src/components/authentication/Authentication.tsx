@@ -3,9 +3,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useFirebase } from "../../providers/FirebaseProvider";
-import { useUser } from "../../providers/UserProvider";
 import "./Authentication.css";
 
 function Authentication() {

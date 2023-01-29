@@ -2,12 +2,10 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   signInWithPopup,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   User,
   GoogleAuthProvider,
   UserCredential,
-  signOut,
 } from "firebase/auth";
 import { useFirebase } from "./FirebaseProvider";
 
