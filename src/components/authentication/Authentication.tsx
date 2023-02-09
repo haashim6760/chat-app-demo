@@ -3,6 +3,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { addDoc, doc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { useFirebase } from "../../providers/FirebaseProvider";
 import "./Authentication.css";
@@ -14,7 +15,7 @@ function Authentication() {
   let { auth } = useFirebase();
   let [error, setError] = useState("");
   let [toggleCreateUserForm, setToggleCreateUserForm] = useState(false);
-
+  let { firestore } = useFirebase();
   const handleUserSignIn = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
@@ -41,6 +42,10 @@ function Authentication() {
         try {
           createUserWithEmailAndPassword(auth!, email, password).then(
             (data) => {
+              setDoc(doc(firestore!, "users", `${data.user.uid}`), {
+                email: email,
+                role: "Standard",
+              });
               setError("");
               signInWithEmailAndPassword(auth!, email, password);
             }

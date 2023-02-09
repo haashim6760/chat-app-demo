@@ -2,16 +2,20 @@ import { FirebaseError } from "firebase/app";
 import {
   addDoc,
   collection,
+  doc,
   DocumentData,
+  getDoc,
   onSnapshot,
   orderBy,
   query,
   QueryDocumentSnapshot,
+  updateDoc,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useFirebase } from "../../providers/FirebaseProvider";
 import { useUser } from "../../providers/UserProvider";
 import "./ChatRoom.css";
+import { confirmAlert } from "react-confirm-alert";
 
 function Chatroom() {
   let [newMessage, setNewMessage] = useState("");
@@ -19,26 +23,36 @@ function Chatroom() {
   let [messages, setMessages] = useState<
     QueryDocumentSnapshot<DocumentData>[] | null
   >(null);
+  let [role, setRole] = useState("");
   let { firestore } = useFirebase();
   let messageRef = collection(firestore!, `messages`);
   let { user } = useUser();
+  let userRoleRef = doc(firestore!, "users", `${user?.uid}`);
   let currentDate = new Date();
 
   useEffect(() => {
-    if (user && firestore) {
-      let allMessagesCollection = query(
-        collection(firestore!, `messages`),
-        orderBy("date", "asc")
-      );
+    (async () => {
+      if (user && firestore) {
+        let userRoleSnap = await getDoc(userRoleRef);
+        if (userRoleSnap.exists()) {
+          let userRole = userRoleSnap.data().role;
+          setRole(userRole);
+        }
 
-      onSnapshot(allMessagesCollection, (snapshot) => {
-        setMessages(
-          snapshot.docs.sort(
-            (a, b) => b.data().message_chat - a.data().message_chat
-          )
+        let allMessagesCollection = query(
+          collection(firestore!, `messages`),
+          orderBy("date", "asc")
         );
-      });
-    }
+
+        onSnapshot(allMessagesCollection, (snapshot) => {
+          setMessages(
+            snapshot.docs.sort(
+              (a, b) => b.data().message_chat - a.data().message_chat
+            )
+          );
+        });
+      }
+    })();
   }, [newMessage]);
 
   const sendNewMessage = async (e: { preventDefault: () => void }) => {
@@ -50,6 +64,7 @@ function Chatroom() {
           message_chat: newMessage,
           date: currentDate,
           uid: user?.uid,
+          email: user?.email,
         }).then(() => {
           console.log("Sent");
           setNewMessage("");
@@ -76,12 +91,55 @@ function Chatroom() {
                   <tr key={entry.id}>
                     {entry.data().uid !== user?.uid ? (
                       <>
+                        {console.log(entry.data().email)}
+                        <td>{entry.data().email}</td>
                         <td>{entry.data().message_chat}</td>
                       </>
                     ) : (
-                      <td className="users-messages">
-                        {entry.data().message_chat}
-                      </td>
+                      <>
+                        <td className="users-message-email">
+                          {entry.data().email}
+                        </td>
+                        <td className="users-messages">
+                          {entry.data().message_chat}
+                          {role === "Standard" ? (
+                            <button
+                              className="delete-button"
+                              onClick={async () => {
+                                const options = {
+                                  title: "Delete",
+                                  message:
+                                    "Are you sure you want to delete this message?",
+                                  buttons: [
+                                    {
+                                      label: "Yes",
+                                      onClick: async () => {
+                                        updateDoc(entry.ref, {
+                                          is_deleted: "true",
+                                        });
+                                      },
+                                    },
+                                  ],
+                                  closeOnEscape: true,
+                                  closeOnClickOutside: true,
+                                  keyCodeForClose: [8, 32],
+                                  willUnmount: () => {},
+                                  afterClose: () => {},
+                                  onClickOutside: () => {},
+                                  onKeypress: () => {},
+                                  onKeypressEscape: () => {},
+                                  overlayClassName: "overlay-custom-class-name",
+                                };
+                                confirmAlert(options);
+                              }}
+                            >
+                              Delete
+                            </button>
+                          ) : (
+                            <div></div>
+                          )}
+                        </td>
+                      </>
                     )}
                   </tr>
                 </>
