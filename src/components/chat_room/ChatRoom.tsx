@@ -9,6 +9,7 @@ import {
   orderBy,
   query,
   QueryDocumentSnapshot,
+  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
@@ -24,6 +25,7 @@ function Chatroom() {
     QueryDocumentSnapshot<DocumentData>[] | null
   >(null);
   let [role, setRole] = useState("");
+  let [banStatus, setBanStatus] = useState(false);
   let { firestore } = useFirebase();
   let messageRef = collection(firestore!, `messages`);
   let { user } = useUser();
@@ -37,6 +39,8 @@ function Chatroom() {
         if (userRoleSnap.exists()) {
           let userRole = userRoleSnap.data().role;
           setRole(userRole);
+          let isUserBanned = userRoleSnap.data().is_banned;
+          setBanStatus(isUserBanned);
         }
 
         let allMessagesCollection = query(
@@ -86,14 +90,93 @@ function Chatroom() {
         <table className="chat-app-main">
           {messages?.map((entry) => {
             try {
-              return entry.data().message_chat ? (
+              return entry.data().message_chat && banStatus !== true ? (
                 <>
                   <tr key={entry.id}>
                     {entry.data().uid !== user?.uid ? (
                       <>
-                        {console.log(entry.data().email)}
-                        <td>{entry.data().email}</td>
+                        {role === "Moderator" ? (
+                          <button
+                            className="ban-button"
+                            onClick={async () => {
+                              const options = {
+                                title: "Ban",
+                                message:
+                                  "Are you sure you want to ban this user?",
+                                buttons: [
+                                  {
+                                    label: "Yes",
+                                    onClick: async () => {
+                                      setDoc(
+                                        doc(
+                                          firestore!,
+                                          "users",
+                                          `${entry.data().uid}`
+                                        ),
+                                        {
+                                          is_banned: "true",
+                                        },
+                                        { merge: true }
+                                      );
+                                    },
+                                  },
+                                ],
+                                closeOnEscape: true,
+                                closeOnClickOutside: true,
+                                keyCodeForClose: [8, 32],
+                                willUnmount: () => {},
+                                afterClose: () => {},
+                                onClickOutside: () => {},
+                                onKeypress: () => {},
+                                onKeypressEscape: () => {},
+                                overlayClassName: "overlay-custom-class-name",
+                              };
+                              confirmAlert(options);
+                            }}
+                          >
+                            <td>{entry.data().email}</td>
+                          </button>
+                        ) : (
+                          <td>{entry.data().email}</td>
+                        )}
+
                         <td>{entry.data().message_chat}</td>
+                        {role === "Moderator" ? (
+                          <button
+                            className="delete-button"
+                            onClick={async () => {
+                              const options = {
+                                title: "Delete",
+                                message:
+                                  "Are you sure you want to delete this message?",
+                                buttons: [
+                                  {
+                                    label: "Yes",
+                                    onClick: async () => {
+                                      updateDoc(entry.ref, {
+                                        is_deleted: "true",
+                                      });
+                                    },
+                                  },
+                                ],
+                                closeOnEscape: true,
+                                closeOnClickOutside: true,
+                                keyCodeForClose: [8, 32],
+                                willUnmount: () => {},
+                                afterClose: () => {},
+                                onClickOutside: () => {},
+                                onKeypress: () => {},
+                                onKeypressEscape: () => {},
+                                overlayClassName: "overlay-custom-class-name",
+                              };
+                              confirmAlert(options);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        ) : (
+                          <div></div>
+                        )}
                       </>
                     ) : (
                       <>
@@ -161,22 +244,25 @@ function Chatroom() {
           ) : (
             <div></div>
           )}
+          {role === "Standard" ? (
+            <div className="new-message">
+              <input
+                className="new-message-input"
+                type="text"
+                placeholder="Message"
+                value={newMessage}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  setNewMessage(event.target.value)
+                }
+              />
 
-          <div className="new-message">
-            <input
-              className="new-message-input"
-              type="text"
-              placeholder="Message"
-              value={newMessage}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                setNewMessage(event.target.value)
-              }
-            />
-
-            <button className="send-button" type="submit">
-              Send
-            </button>
-          </div>
+              <button className="send-button" type="submit">
+                Send
+              </button>
+            </div>
+          ) : (
+            <div></div>
+          )}
         </table>
       </form>
     </article>
