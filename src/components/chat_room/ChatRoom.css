@@ -2,8 +2,8 @@
   flex-direction: column;
   justify-content: center;
   display: flex;
-  /* gap: 5px; */
   width: 100%;
+  min-height: 120vh;
 }
 
 .message {
@@ -41,6 +41,17 @@
   justify-content: flex-end;
 }
 
+/* .users-messages-email, */
+.email,
+.users-message-email {
+  color: var(--accent-color);
+}
+
 tr {
   background-color: rgb(226, 226, 226);
+  background-color: #282c34;
 }
+/* 
+.users-messages {
+  padding-right: 10%;
+} */

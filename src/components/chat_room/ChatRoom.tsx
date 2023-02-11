@@ -17,6 +17,8 @@ import { useFirebase } from "../../providers/FirebaseProvider";
 import { useUser } from "../../providers/UserProvider";
 import "./ChatRoom.css";
 import { confirmAlert } from "react-confirm-alert";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Chatroom() {
   let [newMessage, setNewMessage] = useState("");
@@ -93,53 +95,12 @@ function Chatroom() {
                   <tr key={entry.id}>
                     {entry.data().uid !== user?.uid ? (
                       <>
-                        {role === "Admin" ? (
-                          <button
-                            className="ban-button"
-                            onClick={async () => {
-                              const options = {
-                                title: "Ban",
-                                message:
-                                  "Are you sure you want to ban this user?",
-                                buttons: [
-                                  {
-                                    label: "Yes",
-                                    onClick: async () => {
-                                      setDoc(
-                                        doc(
-                                          firestore!,
-                                          "users",
-                                          `${entry.data().uid}`
-                                        ),
-                                        {
-                                          is_banned: "true",
-                                        },
-                                        { merge: true }
-                                      );
-                                    },
-                                  },
-                                ],
-                                closeOnEscape: true,
-                                closeOnClickOutside: true,
-                                keyCodeForClose: [8, 32],
-                                willUnmount: () => {},
-                                afterClose: () => {},
-                                onClickOutside: () => {},
-                                onKeypress: () => {},
-                                onKeypressEscape: () => {},
-                                overlayClassName: "overlay-custom-class-name",
-                              };
-                              confirmAlert(options);
-                            }}
-                          >
-                            <td>{entry.data().email}</td>
-                          </button>
-                        ) : (
-                          <td>{entry.data().email}</td>
-                        )}
+                        <td className="email">{entry.data().email}</td>
+                        <br />
 
                         <td>{entry.data().message_chat}</td>
-                        {role === "Moderator" ? (
+
+                        {role === "Moderator" || role === "Admin" ? (
                           <button
                             className="delete-button"
                             onClick={async () => {
@@ -170,7 +131,7 @@ function Chatroom() {
                               confirmAlert(options);
                             }}
                           >
-                            Delete
+                            <FontAwesomeIcon icon={faTrash} width="75" />
                           </button>
                         ) : (
                           <div></div>
@@ -183,7 +144,9 @@ function Chatroom() {
                         </td>
                         <td className="users-messages">
                           {entry.data().message_chat}
-                          {role === "Standard" ? (
+                        </td>
+                        {role === "Standard" ? (
+                          <td className="users-messages">
                             <button
                               className="delete-button"
                               onClick={async () => {
@@ -214,12 +177,12 @@ function Chatroom() {
                                 confirmAlert(options);
                               }}
                             >
-                              Delete
+                              <FontAwesomeIcon icon={faTrash} width="75" />
                             </button>
-                          ) : (
-                            <div></div>
-                          )}
-                        </td>
+                          </td>
+                        ) : (
+                          <div></div>
+                        )}
                       </>
                     )}
                   </tr>
