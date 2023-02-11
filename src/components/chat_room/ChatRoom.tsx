@@ -37,10 +37,8 @@ function Chatroom() {
       if (user && firestore) {
         let userRoleSnap = await getDoc(userRoleRef);
         if (userRoleSnap.exists()) {
-          let userRole = userRoleSnap.data().role;
-          setRole(userRole);
-          let isUserBanned = userRoleSnap.data().is_banned;
-          setBanStatus(isUserBanned);
+          setRole(userRoleSnap.data().role);
+          setBanStatus(userRoleSnap.data().is_banned);
         }
 
         let allMessagesCollection = query(
@@ -95,7 +93,7 @@ function Chatroom() {
                   <tr key={entry.id}>
                     {entry.data().uid !== user?.uid ? (
                       <>
-                        {role === "Moderator" ? (
+                        {role === "Admin" ? (
                           <button
                             className="ban-button"
                             onClick={async () => {
