@@ -25,21 +25,24 @@ function Header() {
     <header className="app-header">
       <div className="app-header-inner">
         {user && (
-          <div className="app-header-navbar">
-            {role === "Admin" && (
-              <>
-                <span className="app-header-navbar-link">
-                  <a href="/">Chat App</a>
-                </span>
-                <span className="app-header-navbar-link">
-                  <a href="View_Users">View Users</a>
-                </span>
-              </>
-            )}
-            <button className="app-header-navbar-item" onClick={signOut}>
-              Sign Out
-            </button>
-          </div>
+          <>
+            <div className="app-header-role">{role}</div>
+            <div className="app-header-navbar">
+              {role === "Admin" && (
+                <>
+                  <span className="app-header-navbar-link">
+                    <a href="/">Chat App</a>
+                  </span>
+                  <span className="app-header-navbar-link">
+                    <a href="View_Users">View Users</a>
+                  </span>
+                </>
+              )}
+              <button className="app-header-navbar-item" onClick={signOut}>
+                Sign Out
+              </button>
+            </div>
+          </>
         )}
       </div>
     </header>
