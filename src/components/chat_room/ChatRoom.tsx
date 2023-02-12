@@ -49,11 +49,7 @@ function Chatroom() {
         );
 
         onSnapshot(allMessagesCollection, (snapshot) => {
-          setMessages(
-            snapshot.docs.sort(
-              (a, b) => b.data().message_chat - a.data().message_chat
-            )
-          );
+          setMessages(snapshot.docs);
         });
       }
     })();
