@@ -48,8 +48,6 @@ function ViewUsers() {
             snapshot.docs.sort((a, b) => b.data().username - a.data().username)
           );
         });
-
-        console.log(users);
       }
     })();
   }, [newMessage]);

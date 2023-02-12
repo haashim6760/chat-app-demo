@@ -2,6 +2,7 @@ import { FirebaseError } from "firebase/app";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   DocumentData,
   getDoc,
@@ -9,7 +10,6 @@ import {
   orderBy,
   query,
   QueryDocumentSnapshot,
-  setDoc,
   updateDoc,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
@@ -17,8 +17,6 @@ import { useFirebase } from "../../providers/FirebaseProvider";
 import { useUser } from "../../providers/UserProvider";
 import "./ChatRoom.css";
 import { confirmAlert } from "react-confirm-alert";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Chatroom() {
   let [newMessage, setNewMessage] = useState("");
@@ -26,9 +24,9 @@ function Chatroom() {
   let [messages, setMessages] = useState<
     QueryDocumentSnapshot<DocumentData>[] | null
   >(null);
+  let [username, setUsername] = useState("");
   let [role, setRole] = useState("");
   let [banStatus, setBanStatus] = useState(false);
-  let [usersMessage, setUsersMessage] = useState("");
   let { firestore } = useFirebase();
   let messageRef = collection(firestore!, `messages`);
   let { user } = useUser();
@@ -39,9 +37,11 @@ function Chatroom() {
     (async () => {
       if (user && firestore) {
         let userRoleSnap = await getDoc(userRoleRef);
+
         if (userRoleSnap.exists()) {
           setRole(userRoleSnap.data().role);
           setBanStatus(userRoleSnap.data().is_banned);
+          setUsername(userRoleSnap.data().username);
         }
 
         let allMessagesCollection = query(
@@ -64,17 +64,13 @@ function Chatroom() {
     e.preventDefault();
     if (newMessage !== "") {
       try {
-        console.log("message", newMessage);
         addDoc(messageRef, {
           message_chat: newMessage,
           date: currentDate,
           uid: user?.uid,
-          email: user?.email,
-          is_deleted: false,
+          username: username,
         }).then(() => {
-          console.log("Sent");
           setNewMessage("");
-          console.log("should be empty", newMessage);
         });
       } catch (e) {
         setError("There Was An Error Sending Your Message");
@@ -95,8 +91,7 @@ function Chatroom() {
               return entry.data().message_chat && banStatus !== true ? (
                 <>
                   <tr key={entry.id}>
-                    {entry.data().uid !== user?.uid &&
-                    entry.data().is_deleted !== true ? (
+                    {entry.data().uid !== user?.uid ? (
                       <>
                         <td className="username">{entry.data().username}</td>
                         <br />
@@ -117,9 +112,13 @@ function Chatroom() {
                                   {
                                     label: "Yes",
                                     onClick: async () => {
-                                      updateDoc(entry.ref, {
-                                        is_deleted: true,
-                                      });
+                                      await deleteDoc(
+                                        doc(
+                                          firestore!,
+                                          "messages",
+                                          `${entry.ref}`
+                                        )
+                                      );
                                     },
                                   },
                                   {
@@ -136,8 +135,7 @@ function Chatroom() {
                           <div></div>
                         )}
                       </>
-                    ) : entry.data().uid == user?.uid &&
-                      entry.data().is_deleted !== true ? (
+                    ) : (
                       <>
                         <td className="users-message-username">
                           {entry.data().username}
@@ -159,9 +157,13 @@ function Chatroom() {
                                   {
                                     label: "Yes",
                                     onClick: async () => {
-                                      updateDoc(entry.ref, {
-                                        is_deleted: true,
-                                      });
+                                      await deleteDoc(
+                                        doc(
+                                          firestore!,
+                                          "messages",
+                                          `${entry.id}`
+                                        )
+                                      );
                                     },
                                   },
                                   {
@@ -176,8 +178,6 @@ function Chatroom() {
                           </a>
                         </td>
                       </>
-                    ) : (
-                      <div></div>
                     )}
                   </tr>
                 </>

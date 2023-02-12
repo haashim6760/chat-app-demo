@@ -21,22 +21,21 @@ function Authentication() {
   let [toggleCreateUserForm, setToggleCreateUserForm] = useState(false);
   let [toggleForgotPasswordForm, setToggleForgotPasswordForm] = useState(false);
   let { firestore } = useFirebase();
+
   const handleUserSignIn = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     if (email !== "" && password !== "") {
-      try {
-        signInWithEmailAndPassword(auth!, email, password)
-          .then(() => {
-            setError("");
-          })
-          .catch((e) => {
-            let error = e as FirebaseError;
-            setError(error.message);
-          });
-      } catch (e) {}
+      signInWithEmailAndPassword(auth!, email, password)
+        .then(() => {
+          setError("");
+        })
+        .catch((e) => {
+          let error = e as FirebaseError;
+          setError(error.message);
+        });
     } else {
-      // setError("Please Fill In All Fields.");
+      setError("Please Fill In All Fields.");
     }
   };
 
@@ -59,7 +58,14 @@ function Authentication() {
                 is_banned: false,
               });
               setError("");
-              signInWithEmailAndPassword(auth!, email, password);
+              signInWithEmailAndPassword(auth!, email, password)
+                .then(() => {
+                  setError("");
+                })
+                .catch((e) => {
+                  let error = e as FirebaseError;
+                  setError(error.message);
+                });
             }
           );
         } catch (e) {
@@ -70,14 +76,14 @@ function Authentication() {
         setError("Please Ensure That Both Of Your Passwords Are The Same");
       }
     } else {
-      // setError("Please Fill In All Fields");
+      setError("Please Fill In All Fields");
     }
   };
 
   return (
     <article className="app-main-article">
       <div className="authentication">
-        {toggleSignInForm === true ? (
+        {toggleSignInForm ? (
           <>
             <form className="authentication-form" onSubmit={handleUserSignIn}>
               <input
@@ -99,6 +105,7 @@ function Authentication() {
                   setPassword(event.target.value)
                 }
               />
+
               <a
                 type="button"
                 className="button-forgot"
@@ -114,7 +121,9 @@ function Authentication() {
               >
                 Forgot Password?
               </a>
+
               <div className="space-between-input"></div>
+
               <button className="button-main" type="submit">
                 Sign In
               </button>
@@ -127,6 +136,7 @@ function Authentication() {
               ) : (
                 <div></div>
               )}
+
               <button
                 type="button"
                 className="button-main"
@@ -144,7 +154,7 @@ function Authentication() {
               </button>
             </form>
           </>
-        ) : toggleCreateUserForm === true ? (
+        ) : toggleCreateUserForm ? (
           <form className="create-user-form" onSubmit={handleCreateUser}>
             <input
               className="create-user-form-input"
@@ -184,6 +194,7 @@ function Authentication() {
                 setPasswordConfirm(event.target.value)
               }
             />
+
             <a
               type="button"
               className="button-forgot"
@@ -199,6 +210,7 @@ function Authentication() {
             >
               Forgot Password?
             </a>
+
             <div className="space-between-input"></div>
 
             <button className="button-main" type="submit">
@@ -213,6 +225,7 @@ function Authentication() {
             ) : (
               <div></div>
             )}
+
             <button
               type="button"
               className="button-main"
@@ -240,6 +253,7 @@ function Authentication() {
                 setEmail(event.target.value)
               }
             />
+
             <div className="space-between-input"></div>
 
             <button
@@ -268,6 +282,7 @@ function Authentication() {
             ) : (
               <div></div>
             )}
+
             <button
               type="button"
               className="forgot-button"
@@ -283,6 +298,7 @@ function Authentication() {
             >
               Back To Sign In Form
             </button>
+
             <button
               type="button"
               className="forgot-button"

@@ -29,22 +29,6 @@
   padding: 1%;
 }
 
-/* .create-user-form {
-  flex-direction: column;
-  justify-content: center;
-  align-items: column;
-  display: flex;
-  gap: 5px;
-
-  border-style: solid rgb(252, 250, 250);
-  border-radius: 1%;
-  padding-top: 10%;
-  padding-left: 15%;
-  padding-right: 15%;
-  padding-bottom: 10%;
-  background: rgb(252, 250, 250);
-} */
-
 .authentication-form-input,
 .create-user-form-input,
 .forgot-password-form-input {
@@ -65,22 +49,6 @@
 .button-forgot:hover {
   cursor: pointer;
 }
-
-/* .forgot-password-form {
-  flex-direction: column;
-  justify-content: center;
-  align-items: column;
-  display: flex;
-  gap: 5px;
-
-  border-style: solid rgb(252, 250, 250);
-  border-radius: 1%;
-  padding-top: 15%;
-  padding-left: 10%;
-  padding-right: 10%;
-  padding-bottom: 5%;
-  background: rgb(252, 250, 250);
-} */
 
 .forgot-button-main {
   width: 75%;

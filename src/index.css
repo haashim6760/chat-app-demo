@@ -114,12 +114,11 @@ td,
 tr {
   padding: 1%;
   font-size: 16px;
-  /* color: #333; */
+
   color: white;
 }
 
 body {
-  /* background-color: rgb(226, 226, 226); */
   background-color: #282c34;
 }
 
