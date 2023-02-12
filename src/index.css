@@ -75,6 +75,7 @@ button:disabled:hover {
   border: 1px solid var(--accent-color);
   margin-left: 12.5%;
   padding: 4% 8%;
+  font-size: 120%;
 }
 
 .button-main:hover {
@@ -83,7 +84,7 @@ button:disabled:hover {
 
 a {
   text-decoration: none;
-  color: var(--accent-color-dark);
+  color: white;
 }
 
 a:hover {
@@ -113,11 +114,12 @@ td,
 tr {
   padding: 1%;
   font-size: 16px;
-  color: #333;
+
+  color: white;
 }
 
 body {
-  background-color: rgb(226, 226, 226);
+  background-color: #282c34;
 }
 
 .error {
