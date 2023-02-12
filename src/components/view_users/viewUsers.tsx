@@ -77,39 +77,30 @@ function ViewUsers() {
                     </tr>
                     <tr>
                       <button
-                        className="ban-button"
-                        type="button"
+                        className="delete-button"
                         onClick={async () => {
                           const options = {
-                            title: "Ban",
-                            message: "Are you sure you want to ban this user?",
+                            title: "Delete",
+                            message:
+                              "Are you sure you want to delete this message?",
                             buttons: [
                               {
                                 label: "Yes",
                                 onClick: async () => {
-                                  updateDoc(
-                                    doc(firestore!, "users", `${entry.id}`),
-                                    {
-                                      is_banned: true,
-                                    }
-                                  );
+                                  updateDoc(entry.ref, {
+                                    is_deleted: true,
+                                  });
                                 },
                               },
+                              {
+                                label: "No",
+                              },
                             ],
-                            closeOnEscape: true,
-                            closeOnClickOutside: true,
-                            keyCodeForClose: [8, 32],
-                            willUnmount: () => {},
-                            afterClose: () => {},
-                            onClickOutside: () => {},
-                            onKeypress: () => {},
-                            onKeypressEscape: () => {},
-                            overlayClassName: "overlay-custom-class-name",
                           };
                           confirmAlert(options);
                         }}
                       >
-                        <td>Ban</td>
+                        Ban
                       </button>
                     </tr>
                   </div>

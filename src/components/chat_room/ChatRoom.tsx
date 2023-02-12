@@ -28,6 +28,7 @@ function Chatroom() {
   >(null);
   let [role, setRole] = useState("");
   let [banStatus, setBanStatus] = useState(false);
+  let [usersMessage, setUsersMessage] = useState("");
   let { firestore } = useFirebase();
   let messageRef = collection(firestore!, `messages`);
   let { user } = useUser();
@@ -93,7 +94,8 @@ function Chatroom() {
               return entry.data().message_chat && banStatus !== true ? (
                 <>
                   <tr key={entry.id}>
-                    {entry.data().uid !== user?.uid ? (
+                    {entry.data().uid !== user?.uid &&
+                    entry.data().is_deleted !== true ? (
                       <>
                         <td className="email">{entry.data().email}</td>
                         <br />
@@ -113,20 +115,14 @@ function Chatroom() {
                                     label: "Yes",
                                     onClick: async () => {
                                       updateDoc(entry.ref, {
-                                        is_deleted: "true",
+                                        is_deleted: true,
                                       });
                                     },
                                   },
+                                  {
+                                    label: "No",
+                                  },
                                 ],
-                                closeOnEscape: true,
-                                closeOnClickOutside: true,
-                                keyCodeForClose: [8, 32],
-                                willUnmount: () => {},
-                                afterClose: () => {},
-                                onClickOutside: () => {},
-                                onKeypress: () => {},
-                                onKeypressEscape: () => {},
-                                overlayClassName: "overlay-custom-class-name",
                               };
                               confirmAlert(options);
                             }}
@@ -139,47 +135,45 @@ function Chatroom() {
                       </>
                     ) : (
                       <>
-                        <td className="users-message-email">
-                          {entry.data().email}
-                        </td>
-                        <td className="users-messages">
-                          {entry.data().message_chat}
-                        </td>
-                        {role === "Standard" ? (
-                          <td className="users-messages">
-                            <button
-                              className="delete-button"
-                              onClick={async () => {
-                                const options = {
-                                  title: "Delete",
-                                  message:
-                                    "Are you sure you want to delete this message?",
-                                  buttons: [
-                                    {
-                                      label: "Yes",
-                                      onClick: async () => {
-                                        updateDoc(entry.ref, {
-                                          is_deleted: "true",
-                                        });
+                        {" "}
+                        {role === "Standard" &&
+                        entry.data().is_deleted !== true ? (
+                          <>
+                            <td className="users-message-email">
+                              {entry.data().email}
+                            </td>
+                            <td className="users-messages">
+                              {entry.data().message_chat}
+                            </td>
+                            <td className="users-messages">
+                              <button
+                                className="delete-button"
+                                onClick={async () => {
+                                  const options = {
+                                    title: "Delete",
+                                    message:
+                                      "Are you sure you want to delete this message?",
+                                    buttons: [
+                                      {
+                                        label: "Yes",
+                                        onClick: async () => {
+                                          updateDoc(entry.ref, {
+                                            is_deleted: true,
+                                          });
+                                        },
                                       },
-                                    },
-                                  ],
-                                  closeOnEscape: true,
-                                  closeOnClickOutside: true,
-                                  keyCodeForClose: [8, 32],
-                                  willUnmount: () => {},
-                                  afterClose: () => {},
-                                  onClickOutside: () => {},
-                                  onKeypress: () => {},
-                                  onKeypressEscape: () => {},
-                                  overlayClassName: "overlay-custom-class-name",
-                                };
-                                confirmAlert(options);
-                              }}
-                            >
-                              <FontAwesomeIcon icon={faTrash} width="75" />
-                            </button>
-                          </td>
+                                      {
+                                        label: "No",
+                                      },
+                                    ],
+                                  };
+                                  confirmAlert(options);
+                                }}
+                              >
+                                <FontAwesomeIcon icon={faTrash} width="75" />
+                              </button>
+                            </td>
+                          </>
                         ) : (
                           <div></div>
                         )}
