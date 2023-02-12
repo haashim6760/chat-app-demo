@@ -70,23 +70,23 @@ function ViewUsers() {
                   entry.id !== user?.uid ? (
                   <div className="user-box">
                     <tr key={entry.id}>
-                      <td>Email: {entry.data().email}</td>
+                      <td>Username: {entry.data().username}</td>
                     </tr>
                     <tr>
-                      <td>Username: {entry.data().username}</td>
+                      <td>Email: {entry.data().email}</td>
                     </tr>
                     <tr>
                       <td>Role: {entry.data().role}</td>
                     </tr>
+
                     <tr>
                       <a
                         type="button"
                         className="delete-button"
                         onClick={async () => {
                           const options = {
-                            title: "Delete",
-                            message:
-                              "Are you sure you want to delete this message?",
+                            title: "Ban",
+                            message: "Are you sure you want to ban this user?",
                             buttons: [
                               {
                                 label: "Yes",
@@ -104,7 +104,7 @@ function ViewUsers() {
                           confirmAlert(options);
                         }}
                       >
-                        Ban
+                        Ban User
                       </a>
                     </tr>
                   </div>
