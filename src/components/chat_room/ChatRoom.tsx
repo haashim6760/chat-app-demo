@@ -98,10 +98,11 @@ function Chatroom() {
                     {entry.data().uid !== user?.uid &&
                     entry.data().is_deleted !== true ? (
                       <>
-                        <td className="email">{entry.data().email}</td>
+                        <td className="username">{entry.data().username}</td>
                         <br />
 
                         <td>{entry.data().message_chat}</td>
+                        <br />
 
                         {role === "Moderator" || role === "Admin" ? (
                           <a
@@ -138,8 +139,8 @@ function Chatroom() {
                     ) : entry.data().uid == user?.uid &&
                       entry.data().is_deleted !== true ? (
                       <>
-                        <td className="users-message-email">
-                          {entry.data().email}
+                        <td className="users-message-username">
+                          {entry.data().username}
                         </td>
                         <td className="users-messages">
                           {entry.data().message_chat}

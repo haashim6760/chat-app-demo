@@ -45,7 +45,7 @@ function ViewUsers() {
 
         onSnapshot(allUsersCollection, (snapshot) => {
           setUsers(
-            snapshot.docs.sort((a, b) => b.data().email - a.data().email)
+            snapshot.docs.sort((a, b) => b.data().username - a.data().username)
           );
         });
 
@@ -71,6 +71,9 @@ function ViewUsers() {
                   <div className="user-box">
                     <tr key={entry.id}>
                       <td>Email: {entry.data().email}</td>
+                    </tr>
+                    <tr>
+                      <td>Username: {entry.data().username}</td>
                     </tr>
                     <tr>
                       <td>Role: {entry.data().role}</td>

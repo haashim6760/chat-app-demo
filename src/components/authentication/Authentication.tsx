@@ -3,13 +3,14 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { addDoc, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { useFirebase } from "../../providers/FirebaseProvider";
 import "./Authentication.css";
 
 function Authentication() {
   let [email, setEmail] = useState("");
+  let [username, setUsername] = useState("");
   let [password, setPassword] = useState("");
   let [passwordConfirm, setPasswordConfirm] = useState("");
   let { auth } = useFirebase();
@@ -37,14 +38,21 @@ function Authentication() {
 
   const handleCreateUser = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    if (email !== "" && password !== "" && passwordConfirm !== "") {
+    if (
+      email !== "" &&
+      password !== "" &&
+      passwordConfirm !== "" &&
+      username !== ""
+    ) {
       if (password === passwordConfirm) {
         try {
           createUserWithEmailAndPassword(auth!, email, password).then(
             (data) => {
               setDoc(doc(firestore!, "users", `${data.user.uid}`), {
                 email: email,
+                username: username,
                 role: "Standard",
+                is_banned: false,
               });
               setError("");
               signInWithEmailAndPassword(auth!, email, password);
@@ -124,6 +132,15 @@ function Authentication() {
                 placeholder="Email"
                 onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
                   setEmail(event.target.value)
+                }
+              />
+
+              <input
+                className="create-user-form-input"
+                value={username}
+                placeholder="Username"
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  setUsername(event.target.value)
                 }
               />
 
