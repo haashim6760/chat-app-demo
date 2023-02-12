@@ -70,6 +70,7 @@ function Chatroom() {
           date: currentDate,
           uid: user?.uid,
           email: user?.email,
+          is_deleted: false,
         }).then(() => {
           console.log("Sent");
           setNewMessage("");
@@ -103,7 +104,8 @@ function Chatroom() {
                         <td>{entry.data().message_chat}</td>
 
                         {role === "Moderator" || role === "Admin" ? (
-                          <button
+                          <a
+                            type="button"
                             className="delete-button"
                             onClick={async () => {
                               const options = {
@@ -127,57 +129,54 @@ function Chatroom() {
                               confirmAlert(options);
                             }}
                           >
-                            <FontAwesomeIcon icon={faTrash} width="75" />
-                          </button>
+                            Delete
+                          </a>
                         ) : (
                           <div></div>
                         )}
+                      </>
+                    ) : entry.data().uid == user?.uid &&
+                      entry.data().is_deleted !== true ? (
+                      <>
+                        <td className="users-message-email">
+                          {entry.data().email}
+                        </td>
+                        <td className="users-messages">
+                          {entry.data().message_chat}
+                        </td>
+
+                        <td className="users-messages">
+                          <a
+                            type="button"
+                            className="delete-button"
+                            onClick={async () => {
+                              const options = {
+                                title: "Delete",
+                                message:
+                                  "Are you sure you want to delete this message?",
+                                buttons: [
+                                  {
+                                    label: "Yes",
+                                    onClick: async () => {
+                                      updateDoc(entry.ref, {
+                                        is_deleted: true,
+                                      });
+                                    },
+                                  },
+                                  {
+                                    label: "No",
+                                  },
+                                ],
+                              };
+                              confirmAlert(options);
+                            }}
+                          >
+                            Delete
+                          </a>
+                        </td>
                       </>
                     ) : (
-                      <>
-                        {" "}
-                        {role === "Standard" &&
-                        entry.data().is_deleted !== true ? (
-                          <>
-                            <td className="users-message-email">
-                              {entry.data().email}
-                            </td>
-                            <td className="users-messages">
-                              {entry.data().message_chat}
-                            </td>
-                            <td className="users-messages">
-                              <button
-                                className="delete-button"
-                                onClick={async () => {
-                                  const options = {
-                                    title: "Delete",
-                                    message:
-                                      "Are you sure you want to delete this message?",
-                                    buttons: [
-                                      {
-                                        label: "Yes",
-                                        onClick: async () => {
-                                          updateDoc(entry.ref, {
-                                            is_deleted: true,
-                                          });
-                                        },
-                                      },
-                                      {
-                                        label: "No",
-                                      },
-                                    ],
-                                  };
-                                  confirmAlert(options);
-                                }}
-                              >
-                                <FontAwesomeIcon icon={faTrash} width="75" />
-                              </button>
-                            </td>
-                          </>
-                        ) : (
-                          <div></div>
-                        )}
-                      </>
+                      <div></div>
                     )}
                   </tr>
                 </>
@@ -199,25 +198,22 @@ function Chatroom() {
           ) : (
             <div></div>
           )}
-          {role === "Standard" ? (
-            <div className="new-message">
-              <input
-                className="new-message-input"
-                type="text"
-                placeholder="Message"
-                value={newMessage}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  setNewMessage(event.target.value)
-                }
-              />
 
-              <button className="send-button" type="submit">
-                Send
-              </button>
-            </div>
-          ) : (
-            <div></div>
-          )}
+          <div className="new-message">
+            <input
+              className="new-message-input"
+              type="text"
+              placeholder="Message"
+              value={newMessage}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                setNewMessage(event.target.value)
+              }
+            />
+
+            <button className="send-button" type="submit">
+              Send
+            </button>
+          </div>
         </table>
       </form>
     </article>

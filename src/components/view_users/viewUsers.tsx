@@ -76,7 +76,8 @@ function ViewUsers() {
                       <td>Role: {entry.data().role}</td>
                     </tr>
                     <tr>
-                      <button
+                      <a
+                        type="button"
                         className="delete-button"
                         onClick={async () => {
                           const options = {
@@ -88,7 +89,7 @@ function ViewUsers() {
                                 label: "Yes",
                                 onClick: async () => {
                                   updateDoc(entry.ref, {
-                                    is_deleted: true,
+                                    is_banned: true,
                                   });
                                 },
                               },
@@ -101,7 +102,7 @@ function ViewUsers() {
                         }}
                       >
                         Ban
-                      </button>
+                      </a>
                     </tr>
                   </div>
                 ) : (
