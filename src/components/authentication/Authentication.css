@@ -7,7 +7,9 @@
   padding-top: 12.5%;
 }
 
-.authentication-form {
+.authentication-form,
+.create-user-form,
+.forgot-password-form {
   flex-direction: column;
   justify-content: center;
   align-items: column;
@@ -27,14 +29,7 @@
   padding: 1%;
 }
 
-.authenticate-header {
-  color: white;
-  display: flex;
-  justify-content: center;
-  font-family: "Serif";
-}
-
-.create-user-form {
+/* .create-user-form {
   flex-direction: column;
   justify-content: center;
   align-items: column;
@@ -48,16 +43,61 @@
   padding-right: 15%;
   padding-bottom: 10%;
   background: rgb(252, 250, 250);
-}
+} */
 
 .authentication-form-input,
-.create-user-form-input {
+.create-user-form-input,
+.forgot-password-form-input {
   display: block;
-  padding: 12.5px;
+  padding: 4%;
 }
 
 .authentication-error {
   color: red;
   font-size: 12px;
   text-align: center;
+}
+
+.button-forgot {
+  color: var(--accent-color);
+}
+
+.button-forgot:hover {
+  cursor: pointer;
+}
+
+/* .forgot-password-form {
+  flex-direction: column;
+  justify-content: center;
+  align-items: column;
+  display: flex;
+  gap: 5px;
+
+  border-style: solid rgb(252, 250, 250);
+  border-radius: 1%;
+  padding-top: 15%;
+  padding-left: 10%;
+  padding-right: 10%;
+  padding-bottom: 5%;
+  background: rgb(252, 250, 250);
+} */
+
+.forgot-button-main {
+  width: 75%;
+  background-color: var(--accent-color);
+  color: #fff;
+  border: 1px solid var(--accent-color);
+  margin-left: 12.5%;
+  padding: 3% 6%;
+  font-size: 120%;
+}
+
+.forgot-button {
+  width: 75%;
+  background-color: var(--accent-color);
+  color: #fff;
+  border: 1px solid var(--accent-color);
+  margin-left: 12.5%;
+  padding: 1.5% 3%;
+  font-size: 100%;
 }

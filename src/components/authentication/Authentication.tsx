@@ -6,9 +6,11 @@ import {
 import { doc, setDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { useFirebase } from "../../providers/FirebaseProvider";
+import { useUser } from "../../providers/UserProvider";
 import "./Authentication.css";
 
 function Authentication() {
+  let { resetPassword } = useUser();
   let [email, setEmail] = useState("");
   let [username, setUsername] = useState("");
   let [password, setPassword] = useState("");
@@ -25,7 +27,7 @@ function Authentication() {
     if (email !== "" && password !== "") {
       try {
         signInWithEmailAndPassword(auth!, email, password)
-          .then((data) => {
+          .then(() => {
             setError("");
           })
           .catch((e) => {
@@ -34,7 +36,7 @@ function Authentication() {
           });
       } catch (e) {}
     } else {
-      setError("Please Fill In All Fields.");
+      // setError("Please Fill In All Fields.");
     }
   };
 
@@ -68,7 +70,7 @@ function Authentication() {
         setError("Please Ensure That Both Of Your Passwords Are The Same");
       }
     } else {
-      setError("Please Fill In All Fields");
+      // setError("Please Fill In All Fields");
     }
   };
 
@@ -97,6 +99,21 @@ function Authentication() {
                   setPassword(event.target.value)
                 }
               />
+              <a
+                type="button"
+                className="button-forgot"
+                onClick={async () => {
+                  try {
+                    setToggleForgotPasswordForm(true);
+                    setToggleSignInForm(false);
+                  } catch (e) {
+                    let error = e as FirebaseError;
+                    setError(error.message);
+                  }
+                }}
+              >
+                Forgot Password?
+              </a>
               <div className="space-between-input"></div>
               <button className="button-main" type="submit">
                 Sign In
@@ -125,169 +142,163 @@ function Authentication() {
               >
                 Register Now
               </button>
-              <a
-                type="button"
-                className="button-forgot"
-                onClick={async () => {
-                  try {
-                    setToggleForgotPasswordForm(true);
-                    setToggleSignInForm(false);
-                  } catch (e) {
-                    let error = e as FirebaseError;
-                    setError(error.message);
-                  }
-                }}
-              >
-                Forgot Password
-              </a>
             </form>
           </>
         ) : toggleCreateUserForm === true ? (
-          <div>
-            <form className="create-user-form" onSubmit={handleCreateUser}>
-              <input
-                className="create-user-form-input"
-                type="email"
-                value={email}
-                placeholder="Email"
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  setEmail(event.target.value)
+          <form className="create-user-form" onSubmit={handleCreateUser}>
+            <input
+              className="create-user-form-input"
+              type="email"
+              value={email}
+              placeholder="Email"
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                setEmail(event.target.value)
+              }
+            />
+
+            <input
+              className="create-user-form-input"
+              value={username}
+              placeholder="Username"
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                setUsername(event.target.value)
+              }
+            />
+
+            <input
+              className="create-user-form-input"
+              type="password"
+              value={password}
+              placeholder="Password"
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                setPassword(event.target.value)
+              }
+            />
+
+            <input
+              className="create-user-form-input"
+              type="password"
+              value={passwordConfirm}
+              placeholder="Confirm Password"
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                setPasswordConfirm(event.target.value)
+              }
+            />
+            <a
+              type="button"
+              className="button-forgot"
+              onClick={async () => {
+                try {
+                  setToggleForgotPasswordForm(true);
+                  setToggleCreateUserForm(false);
+                } catch (e) {
+                  let error = e as FirebaseError;
+                  setError(error.message);
                 }
-              />
+              }}
+            >
+              Forgot Password?
+            </a>
+            <div className="space-between-input"></div>
 
-              <input
-                className="create-user-form-input"
-                value={username}
-                placeholder="Username"
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  setUsername(event.target.value)
+            <button className="button-main" type="submit">
+              Create User
+            </button>
+
+            {error ? (
+              <div className="error">
+                <br />
+                {error}
+              </div>
+            ) : (
+              <div></div>
+            )}
+            <button
+              type="button"
+              className="button-main"
+              onClick={async () => {
+                try {
+                  setToggleSignInForm(true);
+                  setToggleCreateUserForm(false);
+                } catch (e) {
+                  let error = e as FirebaseError;
+                  setError(error.message);
                 }
-              />
-
-              <input
-                className="create-user-form-input"
-                type="password"
-                value={password}
-                placeholder="Password"
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  setPassword(event.target.value)
-                }
-              />
-
-              <input
-                className="create-user-form-input"
-                type="password"
-                value={passwordConfirm}
-                placeholder="Confirm Password"
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  setPasswordConfirm(event.target.value)
-                }
-              />
-              <div className="space-between-input"></div>
-
-              <button className="button-main" type="submit">
-                Create User
-              </button>
-
-              {error ? (
-                <div className="error">
-                  <br />
-                  {error}
-                </div>
-              ) : (
-                <div></div>
-              )}
-              <button
-                type="button"
-                className="button-main"
-                onClick={async () => {
-                  try {
-                    setToggleSignInForm(true);
-                    setToggleCreateUserForm(false);
-                  } catch (e) {
-                    let error = e as FirebaseError;
-                    setError(error.message);
-                  }
-                }}
-              >
-                Back To Sign In Form
-              </button>
-              <a
-                type="button"
-                className="button-forgot"
-                onClick={async () => {
-                  try {
-                    setToggleForgotPasswordForm(true);
-                    setToggleCreateUserForm(false);
-                  } catch (e) {
-                    let error = e as FirebaseError;
-                    setError(error.message);
-                  }
-                }}
-              >
-                Forgot Password
-              </a>
-            </form>
-          </div>
+              }}
+            >
+              Back To Sign In Form
+            </button>
+          </form>
         ) : toggleForgotPasswordForm ? (
-          <div>
-            <form className="forgot-user-form">
-              <input
-                className="forgot-password-form-input"
-                type="email"
-                value={email}
-                placeholder="Email"
-                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                  setEmail(event.target.value)
+          <form className="forgot-password-form">
+            <input
+              className="forgot-password-form-input"
+              type="email"
+              value={email}
+              placeholder="Email"
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                setEmail(event.target.value)
+              }
+            />
+            <div className="space-between-input"></div>
+
+            <button
+              type="button"
+              className="forgot-button-main"
+              onClick={async () => {
+                try {
+                  await resetPassword(email);
+                  setError("");
+                  setToggleForgotPasswordForm(false);
+                  setToggleSignInForm(true);
+                } catch (e) {
+                  let error = e as FirebaseError;
+                  setError(error.message);
                 }
-              />
+              }}
+            >
+              Send
+            </button>
 
-              <div className="space-between-input"></div>
-
-              <button className="button-main" type="submit">
-                Create User
-              </button>
-
-              {error ? (
-                <div className="error">
-                  <br />
-                  {error}
-                </div>
-              ) : (
-                <div></div>
-              )}
-              <button
-                type="button"
-                className="button-main"
-                onClick={async () => {
-                  try {
-                    setToggleSignInForm(true);
-                    setToggleForgotPasswordForm(false);
-                  } catch (e) {
-                    let error = e as FirebaseError;
-                    setError(error.message);
-                  }
-                }}
-              >
-                Back To Sign In Form
-              </button>
-              <button
-                type="button"
-                className="button-main"
-                onClick={async () => {
-                  try {
-                    setToggleCreateUserForm(true);
-                    setToggleForgotPasswordForm(false);
-                  } catch (e) {
-                    let error = e as FirebaseError;
-                    setError(error.message);
-                  }
-                }}
-              >
-                Back To Create User Form
-              </button>
-            </form>
-          </div>
+            {error ? (
+              <div className="error">
+                <br />
+                {error}
+              </div>
+            ) : (
+              <div></div>
+            )}
+            <button
+              type="button"
+              className="forgot-button"
+              onClick={async () => {
+                try {
+                  setToggleSignInForm(true);
+                  setToggleForgotPasswordForm(false);
+                } catch (e) {
+                  let error = e as FirebaseError;
+                  setError(error.message);
+                }
+              }}
+            >
+              Back To Sign In Form
+            </button>
+            <button
+              type="button"
+              className="forgot-button"
+              onClick={async () => {
+                try {
+                  setToggleCreateUserForm(true);
+                  setToggleForgotPasswordForm(false);
+                } catch (e) {
+                  let error = e as FirebaseError;
+                  setError(error.message);
+                }
+              }}
+            >
+              Back To Create User Form
+            </button>
+          </form>
         ) : (
           <div></div>
         )}
