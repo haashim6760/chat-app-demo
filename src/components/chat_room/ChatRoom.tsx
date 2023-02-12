@@ -10,7 +10,6 @@ import {
   orderBy,
   query,
   QueryDocumentSnapshot,
-  updateDoc,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useFirebase } from "../../providers/FirebaseProvider";
@@ -85,137 +84,143 @@ function Chatroom() {
   return (
     <article className="app-main-article">
       <form className="message" onSubmit={sendNewMessage}>
-        <table className="chat-app-main">
-          {messages?.map((entry) => {
-            try {
-              return entry.data().message_chat && banStatus !== true ? (
-                <>
-                  <tr key={entry.id}>
-                    {entry.data().uid !== user?.uid ? (
-                      <>
-                        <td className="username">{entry.data().username}</td>
-                        <br />
+        {messages === null ? (
+          <div className="loading">Loading...</div>
+        ) : messages.length === 0 ? (
+          <div className="no-messages">No Users found.</div>
+        ) : (
+          <table className="chat-app-main">
+            {messages?.map((entry) => {
+              try {
+                return entry.data().message_chat && banStatus !== true ? (
+                  <>
+                    <tr key={entry.id}>
+                      {entry.data().uid !== user?.uid ? (
+                        <>
+                          <td className="username">{entry.data().username}</td>
+                          <br />
 
-                        <td>{entry.data().message_chat}</td>
-                        <br />
-
-                        {role === "Moderator" || role === "Admin" ? (
-                          <a
-                            type="button"
-                            className="delete-button"
-                            onClick={async () => {
-                              const options = {
-                                title: "Delete",
-                                message:
-                                  "Are you sure you want to delete this message?",
-                                buttons: [
-                                  {
-                                    label: "Yes",
-                                    onClick: async () => {
-                                      await deleteDoc(
-                                        doc(
-                                          firestore!,
-                                          "messages",
-                                          `${entry.ref}`
-                                        )
-                                      );
+                          <td>{entry.data().message_chat}</td>
+                          <br />
+                          {role === "Moderator" || role === "Admin" ? (
+                            <a
+                              type="button"
+                              className="delete-button"
+                              onClick={async () => {
+                                const options = {
+                                  title: "Delete",
+                                  message:
+                                    "Are you sure you want to delete this message?",
+                                  buttons: [
+                                    {
+                                      label: "Yes",
+                                      onClick: async () => {
+                                        await deleteDoc(
+                                          doc(
+                                            firestore!,
+                                            "messages",
+                                            `${entry.ref}`
+                                          )
+                                        );
+                                      },
                                     },
-                                  },
-                                  {
-                                    label: "No",
-                                  },
-                                ],
-                              };
-                              confirmAlert(options);
-                            }}
-                          >
-                            Delete
-                          </a>
-                        ) : (
-                          <div></div>
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        <td className="users-message-username">
-                          {entry.data().username}
-                        </td>
-                        <td className="users-messages">
-                          {entry.data().message_chat}
-                        </td>
-
-                        <td className="users-messages">
-                          <a
-                            type="button"
-                            className="delete-button"
-                            onClick={async () => {
-                              const options = {
-                                title: "Delete",
-                                message:
-                                  "Are you sure you want to delete this message?",
-                                buttons: [
-                                  {
-                                    label: "Yes",
-                                    onClick: async () => {
-                                      await deleteDoc(
-                                        doc(
-                                          firestore!,
-                                          "messages",
-                                          `${entry.id}`
-                                        )
-                                      );
+                                    {
+                                      label: "No",
                                     },
-                                  },
-                                  {
-                                    label: "No",
-                                  },
-                                ],
-                              };
-                              confirmAlert(options);
-                            }}
-                          >
-                            Delete
-                          </a>
-                        </td>
-                      </>
-                    )}
-                  </tr>
-                </>
-              ) : (
-                <tr></tr>
-              );
-            } catch (e: any) {
-              setError("There Was An Error Viewing Your Message");
+                                  ],
+                                };
+                                confirmAlert(options);
+                              }}
+                            >
+                              Delete
+                            </a>
+                          ) : (
+                            <div></div>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <td className="users-message-username">
+                            {entry.data().username}
+                          </td>
 
-              return;
-            }
-          })}
+                          <td className="users-messages">
+                            {entry.data().message_chat}
+                          </td>
 
-          {error ? (
-            <div className="error">
-              <br />
-              {error}
-            </div>
-          ) : (
-            <div></div>
-          )}
+                          <td className="users-messages">
+                            <a
+                              type="button"
+                              className="delete-button"
+                              onClick={async () => {
+                                const options = {
+                                  title: "Delete",
+                                  message:
+                                    "Are you sure you want to delete this message?",
+                                  buttons: [
+                                    {
+                                      label: "Yes",
+                                      onClick: async () => {
+                                        await deleteDoc(
+                                          doc(
+                                            firestore!,
+                                            "messages",
+                                            `${entry.id}`
+                                          )
+                                        );
+                                      },
+                                    },
+                                    {
+                                      label: "No",
+                                    },
+                                  ],
+                                };
+                                confirmAlert(options);
+                              }}
+                            >
+                              Delete
+                            </a>
+                          </td>
+                        </>
+                      )}
+                    </tr>
+                  </>
+                ) : (
+                  <tr></tr>
+                );
+              } catch (e: any) {
+                setError("There Was An Error Viewing Your Message");
 
-          <div className="new-message">
-            <input
-              className="new-message-input"
-              type="text"
-              placeholder="Message"
-              value={newMessage}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                setNewMessage(event.target.value)
+                return;
               }
-            />
+            })}
 
-            <button className="send-button" type="submit">
-              Send
-            </button>
-          </div>
-        </table>
+            {error ? (
+              <div className="error">
+                <br />
+                {error}
+              </div>
+            ) : (
+              <div></div>
+            )}
+
+            <div className="new-message">
+              <input
+                className="new-message-input"
+                type="text"
+                placeholder="Message"
+                value={newMessage}
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                  setNewMessage(event.target.value)
+                }
+              />
+
+              <button className="send-button" type="submit">
+                Send
+              </button>
+            </div>
+          </table>
+        )}
       </form>
     </article>
   );

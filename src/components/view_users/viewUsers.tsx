@@ -1,43 +1,35 @@
 import { FirebaseError } from "firebase/app";
 import {
-  addDoc,
   collection,
   doc,
   DocumentData,
   getDoc,
   onSnapshot,
-  orderBy,
   query,
   QueryDocumentSnapshot,
-  setDoc,
   updateDoc,
 } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFirebase } from "../../providers/FirebaseProvider";
 import { useUser } from "../../providers/UserProvider";
 import { confirmAlert } from "react-confirm-alert";
 import "../view_users/viewUsers.css";
 
 function ViewUsers() {
-  let [newMessage, setNewMessage] = useState("");
   let [error, setError] = useState("");
   let [users, setUsers] = useState<
     QueryDocumentSnapshot<DocumentData>[] | null
   >(null);
-  let [role, setRole] = useState("");
   let [banStatus, setBanStatus] = useState(false);
   let { firestore } = useFirebase();
-  let messageRef = collection(firestore!, `users`);
   let { user } = useUser();
   let userRoleRef = doc(firestore!, "users", `${user?.uid}`);
-  let currentDate = new Date();
 
   useEffect(() => {
     (async () => {
       if (user && firestore) {
         let userRoleSnap = await getDoc(userRoleRef);
         if (userRoleSnap.exists()) {
-          setRole(userRoleSnap.data().role);
           setBanStatus(userRoleSnap.data().is_banned);
         }
 
@@ -50,7 +42,7 @@ function ViewUsers() {
         });
       }
     })();
-  }, [newMessage]);
+  });
 
   return (
     <article className="app-main-article">
@@ -70,9 +62,11 @@ function ViewUsers() {
                     <tr key={entry.id}>
                       <td>Username: {entry.data().username}</td>
                     </tr>
+
                     <tr>
                       <td>Email: {entry.data().email}</td>
                     </tr>
+
                     <tr>
                       <td>Role: {entry.data().role}</td>
                     </tr>
@@ -110,7 +104,8 @@ function ViewUsers() {
                   <tr></tr>
                 );
               } catch (e: any) {
-                setError("There Was An Error Viewing Your Message");
+                let error = e as FirebaseError;
+                setError(error.message);
 
                 return;
               }
