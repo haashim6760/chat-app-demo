@@ -1,4 +1,5 @@
-import { FirebaseError } from "firebase/app";
+/* eslint-disable jsx-a11y/anchor-is-valid */
+
 import {
   collection,
   doc,
@@ -16,7 +17,6 @@ import { confirmAlert } from "react-confirm-alert";
 import "../view_users/viewUsers.css";
 
 function ViewUsers() {
-  let [error, setError] = useState("");
   let [users, setUsers] = useState<
     QueryDocumentSnapshot<DocumentData>[] | null
   >(null);
@@ -54,71 +54,55 @@ function ViewUsers() {
         ) : (
           <table className="view-users-main">
             {users?.map((entry) => {
-              try {
-                return banStatus !== true &&
-                  entry.data().is_banned !== true &&
-                  entry.id !== user?.uid ? (
-                  <div className="user-box">
-                    <tr key={entry.id}>
-                      <td>Username: {entry.data().username}</td>
-                    </tr>
+              return banStatus !== true &&
+                entry.data().is_banned !== true &&
+                entry.id !== user?.uid ? (
+                <div className="user-box">
+                  <tr key={entry.id}>
+                    <td>Username: {entry.data().username}</td>
+                  </tr>
 
-                    <tr>
-                      <td>Email: {entry.data().email}</td>
-                    </tr>
+                  <tr>
+                    <td>Email: {entry.data().email}</td>
+                  </tr>
 
-                    <tr>
-                      <td>Role: {entry.data().role}</td>
-                    </tr>
+                  <tr>
+                    <td>Role: {entry.data().role}</td>
+                  </tr>
 
-                    <tr>
-                      <a
-                        type="button"
-                        className="delete-button"
-                        onClick={async () => {
-                          const options = {
-                            title: "Ban",
-                            message: "Are you sure you want to ban this user?",
-                            buttons: [
-                              {
-                                label: "Yes",
-                                onClick: async () => {
-                                  updateDoc(entry.ref, {
-                                    is_banned: true,
-                                  });
-                                },
+                  <tr>
+                    <a
+                      type="button"
+                      className="delete-button"
+                      onClick={async () => {
+                        const options = {
+                          title: "Ban",
+                          message: "Are you sure you want to ban this user?",
+                          buttons: [
+                            {
+                              label: "Yes",
+                              onClick: async () => {
+                                updateDoc(entry.ref, {
+                                  is_banned: true,
+                                });
                               },
-                              {
-                                label: "No",
-                              },
-                            ],
-                          };
-                          confirmAlert(options);
-                        }}
-                      >
-                        Ban User
-                      </a>
-                    </tr>
-                  </div>
-                ) : (
-                  <tr></tr>
-                );
-              } catch (e: any) {
-                let error = e as FirebaseError;
-                setError(error.message);
-
-                return;
-              }
+                            },
+                            {
+                              label: "No",
+                            },
+                          ],
+                        };
+                        confirmAlert(options);
+                      }}
+                    >
+                      Ban User
+                    </a>
+                  </tr>
+                </div>
+              ) : (
+                <tr></tr>
+              );
             })}
-
-            {error ? (
-              <div className="error">
-                <br />
-                {error}
-              </div>
-            ) : (
-              <div></div>
-            )}
           </table>
         )}
       </form>
