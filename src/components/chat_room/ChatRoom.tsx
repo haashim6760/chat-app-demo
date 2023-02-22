@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+
 import { FirebaseError } from "firebase/app";
 import {
   addDoc,
@@ -53,7 +55,7 @@ function Chatroom() {
         });
       }
     })();
-  }, [newMessage]);
+  }, [newMessage, firestore, user, userRoleRef]);
 
   const sendNewMessage = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -87,108 +89,102 @@ function Chatroom() {
         ) : (
           <table className="chat-app-main">
             {messages?.map((entry) => {
-              try {
-                return entry.data().message_chat && banStatus !== true ? (
-                  <>
-                    <tr key={entry.id}>
-                      {entry.data().uid !== user?.uid ? (
-                        <>
-                          <td className="username">{entry.data().username}</td>
-                          <br />
+              return entry.data().message_chat && banStatus !== true ? (
+                <>
+                  <tr key={entry.id}>
+                    {entry.data().uid !== user?.uid ? (
+                      <>
+                        <td className="username">{entry.data().username}</td>
+                        <br />
 
-                          <td>{entry.data().message_chat}</td>
-                          <br />
-                          {role === "Moderator" || role === "Admin" ? (
-                            <a
-                              type="button"
-                              className="delete-button"
-                              onClick={async () => {
-                                const options = {
-                                  title: "Delete",
-                                  message:
-                                    "Are you sure you want to delete this message?",
-                                  buttons: [
-                                    {
-                                      label: "Yes",
-                                      onClick: async () => {
-                                        await deleteDoc(
-                                          doc(
-                                            firestore!,
-                                            "messages",
-                                            `${entry.ref}`
-                                          )
-                                        );
-                                      },
+                        <td>{entry.data().message_chat}</td>
+                        <br />
+                        {role === "Moderator" || role === "Admin" ? (
+                          <a
+                            type="button"
+                            className="delete-button"
+                            onClick={async () => {
+                              const options = {
+                                title: "Delete",
+                                message:
+                                  "Are you sure you want to delete this message?",
+                                buttons: [
+                                  {
+                                    label: "Yes",
+                                    onClick: async () => {
+                                      await deleteDoc(
+                                        doc(
+                                          firestore!,
+                                          "messages",
+                                          `${entry.ref}`
+                                        )
+                                      );
                                     },
-                                    {
-                                      label: "No",
-                                    },
-                                  ],
-                                };
-                                confirmAlert(options);
-                              }}
-                            >
-                              Delete
-                            </a>
-                          ) : (
-                            <div></div>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          <td className="users-message-username">
-                            {entry.data().username}
-                          </td>
+                                  },
+                                  {
+                                    label: "No",
+                                  },
+                                ],
+                              };
+                              confirmAlert(options);
+                            }}
+                          >
+                            Delete
+                          </a>
+                        ) : (
+                          <div></div>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <td className="users-message-username">
+                          {entry.data().username}
+                        </td>
 
-                          <td className="users-messages">
-                            {entry.data().message_chat}
-                          </td>
+                        <td className="users-messages">
+                          {entry.data().message_chat}
+                        </td>
 
-                          <td className="users-messages">
-                            <a
-                              type="button"
-                              className="delete-button"
-                              onClick={async () => {
-                                const options = {
-                                  title: "Delete",
-                                  message:
-                                    "Are you sure you want to delete this message?",
-                                  buttons: [
-                                    {
-                                      label: "Yes",
-                                      onClick: async () => {
-                                        await deleteDoc(
-                                          doc(
-                                            firestore!,
-                                            "messages",
-                                            `${entry.id}`
-                                          )
-                                        );
-                                      },
+                        <td className="users-messages">
+                          <a
+                            type="button"
+                            className="delete-button"
+                            onClick={async () => {
+                              const options = {
+                                title: "Delete",
+                                message:
+                                  "Are you sure you want to delete this message?",
+                                buttons: [
+                                  {
+                                    label: "Yes",
+                                    onClick: async () => {
+                                      await deleteDoc(
+                                        doc(
+                                          firestore!,
+                                          "messages",
+                                          `${entry.id}`
+                                        )
+                                      );
                                     },
-                                    {
-                                      label: "No",
-                                    },
-                                  ],
-                                };
-                                confirmAlert(options);
-                              }}
-                            >
-                              Delete
-                            </a>
-                          </td>
-                        </>
-                      )}
-                    </tr>
-                  </>
-                ) : (
-                  <tr></tr>
-                );
-              } catch (e: any) {
-                setError("There Was An Error Viewing Your Message");
-
-                return;
-              }
+                                  },
+                                  {
+                                    label: "No",
+                                  },
+                                ],
+                              };
+                              confirmAlert(options);
+                            }}
+                          >
+                            Delete
+                          </a>
+                        </td>
+                      </>
+                    )}
+                  </tr>
+                </>
+              ) : (
+                <tr></tr>
+              );
             })}
 
             {error ? (
