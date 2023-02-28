@@ -2,10 +2,10 @@ import "./App.css";
 import "firebase/compat/firestore";
 import "firebase/compat/auth";
 import { Route, Routes } from "react-router-dom";
-import Authentication from "./components/authentication/Authentication";
+import Authentication from "./routes/authentication/Authentication";
 import Layout from "./Layout";
-import Chatroom from "./components/chat_room/ChatRoom";
-import ViewUsers from "./components/view_users/viewUsers";
+import Chatroom from "./routes/chat_room/ChatRoom";
+import ViewUsers from "./routes/view_users/viewUsers";
 function App() {
   return (
     <Routes>
