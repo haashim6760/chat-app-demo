@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { useFirebase } from "../../providers/FirebaseProvider";
 import { useUser } from "../../providers/UserProvider";
 import { confirmAlert } from "react-confirm-alert";
-import "../view_users/viewUsers.css";
+import "./viewUsers.css";
 
 function ViewUsers() {
   let [users, setUsers] = useState<

@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Authentication from "./components/authentication/Authentication";
+import Authentication from "./routes/authentication/Authentication";
 
 import Header from "./components/header/Header";
 import { useUser } from "./providers/UserProvider";

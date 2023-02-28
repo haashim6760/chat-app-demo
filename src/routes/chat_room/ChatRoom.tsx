@@ -20,20 +20,23 @@ import "./ChatRoom.css";
 import { confirmAlert } from "react-confirm-alert";
 
 function Chatroom() {
-  let [newMessage, setNewMessage] = useState("");
-  let [error, setError] = useState("");
+  let [newMessage, setNewMessage] = useState<string>("");
+  let [error, setError] = useState<string>("");
   let [messages, setMessages] = useState<
     QueryDocumentSnapshot<DocumentData>[] | null
   >(null);
-  let [username, setUsername] = useState("");
-  let [role, setRole] = useState("");
-  let [banStatus, setBanStatus] = useState(false);
+  let [username, setUsername] = useState<string>("");
+  let [role, setRole] = useState<string>("");
+  let [banStatus, setBanStatus] = useState<boolean>(false);
   let { firestore } = useFirebase();
   let messageRef = collection(firestore!, `messages`);
   let { user } = useUser();
   let userRoleRef = doc(firestore!, "users", `${user?.uid}`);
   let currentDate = new Date();
 
+  // On the initial render of the page, if the user and firestore are true, the role
+  // ban status and username are retrieved from the currently logged in user's user document.
+  // Next, all messages are collected from the messages collection and set to the value of messages.
   useEffect(() => {
     (async () => {
       if (user && firestore) {
@@ -61,6 +64,9 @@ function Chatroom() {
     })();
   }, [newMessage, firestore, user, userRoleRef]);
 
+  //This function handles sending the new message. If the newMessage variable are empty, then
+  //the new message is added to the messages collection. The new message document contains the
+  //message, date, uid and username fields.
   const sendNewMessage = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (newMessage !== "") {
@@ -85,24 +91,32 @@ function Chatroom() {
 
   return (
     <article className="app-main-article">
+      {/* The form calls the sendNewMessage function */}
       <form className="message" onSubmit={sendNewMessage}>
+        {/* If the messages are null, then "Loading" will be displayed,
+        else if there are 0 messages,  "No Messages found".  */}
         {messages === null ? (
           <div className="loading">Loading...</div>
         ) : messages.length === 0 ? (
-          <div className="no-messages">No Users found.</div>
+          <div className="no-messages">No Messages found.</div>
         ) : (
           <table className="chat-app-main">
+            {/* The messages array is iterated over the array and each message is displayed */}
             {messages?.map((entry) => {
+              // The messages are only shown if the currently logged in user isn't banned and the message isn't banned
               return entry.data().message_chat && banStatus !== true ? (
                 <>
                   <tr key={entry.id}>
+                    {/* Display the username and message under it. 
+                    This will display messages that aren't the currently logged in users' messages on the left*/}
                     {entry.data().uid !== user?.uid ? (
                       <>
                         <td className="username">{entry.data().username}</td>
                         <br />
-
                         <td>{entry.data().message_chat}</td>
                         <br />
+                        {/* If the currenly logged in user's role is moderator or admin,
+                        they can delete messages, else the delete button will not appear*/}
                         {role === "Moderator" || role === "Admin" ? (
                           <a
                             type="button"
@@ -141,6 +155,8 @@ function Chatroom() {
                       </>
                     ) : (
                       <>
+                        {/* If the currenly logged in user's role is not moderator or admin (standard role),
+                        they can delete their own messages, else the delete button will not appear*/}
                         <td className="users-message-username">
                           {entry.data().username}
                         </td>
@@ -200,6 +216,7 @@ function Chatroom() {
               <div></div>
             )}
 
+            {/* The user can add new messages, the input is set to the newMessages variable */}
             <div className="new-message">
               <input
                 className="new-message-input"
