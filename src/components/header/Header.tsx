@@ -8,8 +8,9 @@ function Header() {
   let { user, signOut } = useUser();
   let { firestore } = useFirebase();
   let userRoleRef = doc(firestore!, "users", `${user?.uid}`);
-  let [role, setRole] = useState("");
+  let [role, setRole] = useState<string>("");
 
+  // On initial render, get the currently logged in users role and set it to the role variable
   useEffect(() => {
     (async () => {
       if (user && firestore) {
@@ -24,10 +25,12 @@ function Header() {
   return (
     <header className="app-header">
       <div className="app-header-inner">
+        {/* If the user true(logged in), display the header */}
         {user && (
           <>
             <div className="app-header-role">{role}</div>
             <div className="app-header-navbar">
+              {/* If the user's role is admin display the chat app and view users buttons in the header */}
               {role === "Admin" && (
                 <>
                   <span className="app-header-navbar-link">
