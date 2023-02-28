@@ -101,7 +101,7 @@ function Chatroom() {
           <div className="no-messages">No Messages found.</div>
         ) : (
           <table className="chat-app-main">
-            {/* The messages array is iterated over the array and each message is displayed */}
+            {/* The messages array is iterated over and each message is displayed */}
             {messages?.map((entry) => {
               // The messages are only shown if the currently logged in user isn't banned and the message isn't banned
               return entry.data().message_chat && banStatus !== true ? (
