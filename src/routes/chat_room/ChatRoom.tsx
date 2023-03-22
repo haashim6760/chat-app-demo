@@ -99,6 +99,39 @@ function Chatroom() {
           <table className="chat-app-main">
             {/* The messages array is iterated over and each message is displayed */}
             {messages?.map((entry) => {
+              // The delete button function that gives deletes messages.
+              // This is called later.
+              function deleteFunction() {
+                return (
+                  <a
+                    type="button"
+                    className="delete-button"
+                    onClick={async () => {
+                      const options = {
+                        title: "Delete",
+                        message:
+                          "Are you sure you want to delete this message?",
+                        buttons: [
+                          {
+                            label: "Yes",
+                            onClick: async () => {
+                              await deleteDoc(
+                                doc(firestore!, "messages", `${entry.id}`)
+                              );
+                            },
+                          },
+                          {
+                            label: "No",
+                          },
+                        ],
+                      };
+                      confirmAlert(options);
+                    }}
+                  >
+                    Delete
+                  </a>
+                );
+              }
               // The messages are only shown if the currently logged in user isn't banned and the message isn't banned
               return entry.data().message_chat && banStatus !== true ? (
                 <>
@@ -114,37 +147,8 @@ function Chatroom() {
                         {/* If the currenly logged in user's role is moderator or admin,
                         they can delete messages, else the delete button will not appear*/}
                         {role === "Moderator" || role === "Admin" ? (
-                          <a
-                            type="button"
-                            className="delete-button"
-                            onClick={async () => {
-                              const options = {
-                                title: "Delete",
-                                message:
-                                  "Are you sure you want to delete this message?",
-                                buttons: [
-                                  {
-                                    label: "Yes",
-                                    onClick: async () => {
-                                      await deleteDoc(
-                                        doc(
-                                          firestore!,
-                                          "messages",
-                                          `${entry.ref}`
-                                        )
-                                      );
-                                    },
-                                  },
-                                  {
-                                    label: "No",
-                                  },
-                                ],
-                              };
-                              confirmAlert(options);
-                            }}
-                          >
-                            Delete
-                          </a>
+                          // The delete function mentioned above is called
+                          deleteFunction()
                         ) : (
                           <div></div>
                         )}
@@ -162,37 +166,11 @@ function Chatroom() {
                         </td>
 
                         <td className="users-messages">
-                          <a
-                            type="button"
-                            className="delete-button"
-                            onClick={async () => {
-                              const options = {
-                                title: "Delete",
-                                message:
-                                  "Are you sure you want to delete this message?",
-                                buttons: [
-                                  {
-                                    label: "Yes",
-                                    onClick: async () => {
-                                      await deleteDoc(
-                                        doc(
-                                          firestore!,
-                                          "messages",
-                                          `${entry.id}`
-                                        )
-                                      );
-                                    },
-                                  },
-                                  {
-                                    label: "No",
-                                  },
-                                ],
-                              };
-                              confirmAlert(options);
-                            }}
-                          >
-                            Delete
-                          </a>
+                          {
+                            // The delete function mentioned above is called again
+
+                            deleteFunction()
+                          }
                         </td>
                       </>
                     )}
